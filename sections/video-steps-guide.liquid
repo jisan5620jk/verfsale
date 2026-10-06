@@ -1,0 +1,538 @@
+{% comment %}
+  Section: Video Guide with 3 Steps
+  Fonts: Eigerdals (Heading), Maven Pro (Body)
+  Constraints: No CSS Variables, No Dynamic CSS in Style tag.
+{% endcomment %}
+
+<!-- Import Google Font: Maven Pro -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Base Styles */
+  .vs-section {
+    width: 100%;
+    padding: 60px 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .vs-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* Header */
+  .vs-header {
+    margin-bottom: 40px;
+  }
+
+  .vs-main-title {
+    font-family: 'Eigerdals', 'Maven Pro', sans-serif;
+    font-size: 42px;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    line-height: 1.2;
+  }
+
+  .vs-sub-title {
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  /* Video Wrapper */
+  .vs-video-wrapper {
+    position: relative;
+    width: 100%;
+    /* 16:9 Aspect Ratio calculation handled by padding in inner element or direct height */
+    aspect-ratio: 16 / 9;
+    background-color: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 60px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  .vs-poster-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    display: block;
+  }
+
+  .vs-video-wrapper:hover .vs-poster-image {
+    transform: scale(1.02);
+  }
+
+  /* Video Overlay Content */
+  .vs-video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    padding: 40px;
+    box-sizing: border-box;
+    text-align: left;
+  }
+
+  /* Play Button */
+  .vs-play-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  .vs-play-btn:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    background-color: #ffffff;
+  }
+
+  .vs-play-btn svg {
+    width: 30px;
+    height: 30px;
+    fill: #0056b3; /* Default fallback */
+    margin-left: 4px; /* Optical center alignment */
+  }
+
+  /* Text inside video */
+  .vs-video-text-content {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    color: #fff;
+    max-width: 500px;
+    pointer-events: none; /* Let clicks pass to wrapper */
+  }
+
+  .vs-video-heading {
+    font-family: 'Eigerdals', 'Maven Pro', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .vs-video-meta {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .vs-video-meta strong {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  /* The actual video player (hidden initially) */
+  .vs-video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    display: none; /* Hidden by default */
+  }
+
+  .vs-video-player iframe,
+  .vs-video-player video {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* Steps Section */
+  .vs-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    position: relative;
+  }
+
+  /* Connecting line (pseudo-element for desktop) */
+  .vs-steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 25px; /* Half height of circle (50px / 2) */
+    left: 16%; /* Start after first circle */
+    right: 16%; /* End before last circle */
+    height: 1px;
+    background-color: #e0e0e0;
+    z-index: 0;
+  }
+
+  .vs-step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .vs-step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  .vs-step-title {
+    font-family: 'Eigerdals', 'Maven Pro', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+  }
+
+  .vs-step-desc {
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 250px;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 800px) {
+    .vs-main-title {
+      font-size: 32px;
+    }
+
+    .vs-video-heading {
+      font-size: 24px;
+    }
+
+    .vs-steps-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .vs-steps-grid::before {
+      display: none; /* Hide connecting line on mobile */
+    }
+
+    .vs-video-wrapper {
+        aspect-ratio: 4 / 3; /* Taller on mobile */
+    }
+  }
+</style>
+
+<div class="vs-section" style="background-color: {{ section.settings.bg_color }};">
+  <div class="vs-container">
+    <!-- Section Header -->
+    <div class="vs-header">
+      <h2 class="vs-main-title" style="color: {{ section.settings.heading_color }};">
+        {{ section.settings.heading }}
+      </h2>
+      <p class="vs-sub-title" style="color: {{ section.settings.text_color }};">
+        {{ section.settings.subtext }}
+      </p>
+    </div>
+
+    <!-- Video Area -->
+    <div class="vs-video-wrapper" id="videoWrapper-{{ section.id }}" onclick="playVideo('{{ section.id }}')">
+      <!-- Static Poster & Overlay -->
+      <div id="posterLayer-{{ section.id }}">
+        {% if section.settings.video_poster != blank %}
+          {{
+            section.settings.video_poster
+            | image_url: width: 1200
+            | image_tag: class: 'vs-poster-image', loading: 'lazy'
+          }}
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'vs-poster-image' }}
+        {% endif %}
+
+        <div class="vs-video-overlay">
+          <!-- Play Button (Centered Absolute) -->
+          <button class="vs-play-btn" aria-label="Play Video">
+            <svg viewBox="0 0 24 24" style="fill: {{ section.settings.play_icon_color }};">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Video Player -->
+      <div class="vs-video-player" id="playerLayer-{{ section.id }}">
+        {% if section.settings.video_url_type == 'youtube' %}
+          <iframe
+            src=""
+            data-src="https://www.youtube.com/embed/{{ section.settings.video_id }}?autoplay=1&rel=0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          >
+          </iframe>
+        {% elsif section.settings.video_url_type == 'mp4' %}
+          <video controls style="width:100%; height:100%;">
+            <source src="{{ section.settings.mp4_url }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- 3 Steps Grid -->
+    <div class="vs-steps-grid">
+      {% for block in section.blocks %}
+        <div class="vs-step-item">
+          <div
+            class="vs-step-number"
+            style="background-color: {{ section.settings.step_circle_bg }}; color: {{ section.settings.step_circle_text }};"
+          >
+            {{ forloop.index }}
+          </div>
+          <h3 class="vs-step-title" style="color: {{ section.settings.step_heading_color }};">
+            {{ block.settings.title }}
+          </h3>
+          <p class="vs-step-desc" style="color: {{ section.settings.step_desc_color }};">
+            {{ block.settings.description }}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  function playVideo(sectionId) {
+    var posterLayer = document.getElementById('posterLayer-' + sectionId);
+    var playerLayer = document.getElementById('playerLayer-' + sectionId);
+
+    if (posterLayer && playerLayer) {
+      posterLayer.style.display = 'none';
+      playerLayer.style.display = 'block';
+
+      // Handle iframe src to trigger autoplay
+      var iframe = playerLayer.querySelector('iframe');
+      if (iframe) {
+        iframe.src = iframe.getAttribute('data-src');
+      }
+
+      // Handle HTML5 Video play
+      var video = playerLayer.querySelector('video');
+      if (video) {
+        video.play();
+      }
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Video Guide & Steps",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fdfdfd"
+    },
+    {
+      "type": "header",
+      "content": "Headings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main Heading",
+      "default": "See how WP Flow works"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#b9005e"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Watch this step-by-step video guide to understand the complete application process"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Subtext Color",
+      "default": "#555555"
+    },
+    {
+      "type": "header",
+      "content": "Video Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video Cover Image"
+    },
+    {
+      "type": "color",
+      "id": "play_icon_color",
+      "label": "Play Icon Color",
+      "default": "#2067b2"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_overlay",
+      "label": "Logo Overlay (Bottom Left)"
+    },
+    {
+      "type": "textarea",
+      "id": "video_text_overlay",
+      "label": "Overlay Text (Heading)",
+      "default": "Remmers bouwsystemen<br>Vloerafdichting met WP Flow"
+    },
+    {
+      "type": "text",
+      "id": "video_cta_text",
+      "label": "Video CTA Label",
+      "default": "Watch Application Tutorial"
+    },
+    {
+      "type": "text",
+      "id": "video_duration",
+      "label": "Duration Label",
+      "default": "5 minutes"
+    },
+    {
+      "type": "select",
+      "id": "video_url_type",
+      "label": "Video Source",
+      "options": [
+        { "value": "youtube", "label": "YouTube" },
+        { "value": "mp4", "label": "MP4 Direct Link" }
+      ],
+      "default": "youtube"
+    },
+    {
+      "type": "text",
+      "id": "video_id",
+      "label": "YouTube Video ID",
+      "default": "ScMzIvxBSi4",
+      "info": "e.g. ScMzIvxBSi4 from youtube.com/watch?v=ScMzIvxBSi4"
+    },
+    {
+      "type": "url",
+      "id": "mp4_url",
+      "label": "MP4 File Link",
+      "info": "Upload to Settings > Files and copy link"
+    },
+    {
+      "type": "header",
+      "content": "Steps Styling"
+    },
+    {
+      "type": "color",
+      "id": "step_circle_bg",
+      "label": "Circle Background",
+      "default": "#fce4ec"
+    },
+    {
+      "type": "color",
+      "id": "step_circle_text",
+      "label": "Circle Text Color",
+      "default": "#b9005e"
+    },
+    {
+      "type": "color",
+      "id": "step_heading_color",
+      "label": "Step Heading Color",
+      "default": "#b9005e"
+    },
+    {
+      "type": "color",
+      "id": "step_desc_color",
+      "label": "Step Description Color",
+      "default": "#666666"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Process Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step Title",
+          "default": "Step Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Step Description",
+          "default": "Short description of the step."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Guide & Steps",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Surface Preparation",
+            "description": "Learn how to properly prepare your floor"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Application Technique",
+            "description": "See the correct application method"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Final Finishing",
+            "description": "Complete the waterproofing process"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,269 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="testimonials-section color-{{ section.settings.color_scheme }} gradient">
+  <div class="section-{{ section.id }}-padding page-width">
+    {%- if section.settings.title != blank -%}
+    <div class="page-width">
+      <div class="top-testi-text center">
+        <p>{{ section.settings.small-text }}</p>
+      </div>
+       <div class="title-wrapper--self-padded-mobile title-wrapper--no-top-margin {{ section.settings.align_text }}">
+        <h2 class="title inline-richtext {{ section.settings.heading_size }}">
+          {{ section.settings.title }}
+        </h2>
+       </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="slideshow-wrapper">
+        <div class="testimonials-content-container">
+      <div class="testimonials-slider">
+        {%- for block in section.blocks -%}
+          <div class="testimonials-slide">
+            <div class="testimonials-slider_text {{ section.settings.align_text }}">
+
+              {%- if block.settings.icon == 'quote' -%}
+                <span class="quote-icon"><svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-quote" viewBox="0 0 41 35"><path d="M10.208 17.711h6.124v16.332H0V21.684C0 8.184 5.444.956 16.332 0v6.125c-4.083 1.14-6.124 4.414-6.124 9.82v1.766zm24.498 0h6.124v16.332H24.498V21.684C24.498 8.184 29.942.956 40.83 0v6.125c-4.083 1.14-6.124 4.414-6.124 9.82v1.766z" fill="#dbdbdb" fill-rule="evenodd"/></svg></span>
+              {%- elsif block.settings.icon == '5-stars' -%}
+                <span class="testimonial-stars">★★★★★</span>
+              {%- elsif block.settings.icon == '4-stars' -%}
+                <span class="testimonial-stars">★★★★</span>
+              {%- elsif block.settings.icon == '3-stars' -%}
+                <span class="testimonial-stars">★★★</span>
+              {%- elsif block.settings.icon == '2-stars' -%}
+                <span class="testimonial-stars">★★</span>
+              {%- elsif block.settings.icon == '1-star' -%}
+                <span class="testimonial-stars">★</span>
+              {%- endif -%}
+
+              {%- if block.settings.testimonial != blank -%}
+                <div class="rte">{{ block.settings.testimonial }}</div>
+              {%- endif -%}
+
+              {%- if block.settings.image != blank -%}
+                <div class="testimonail-image{% if section.settings.round_images %} testimonail-image--round{% endif %}">
+                    <img src="{{ block.settings.image |img_url:'master' }}" width="" height="" />
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.author != blank -%}
+                <div class="testimonials_info">{{ block.settings.author | escape }}</div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+    </div>
+      <div class="testimonial-link">
+        <a href="{{ section.settings.link_url }}" class="link">{{ section.settings.link_label }}</a>
+      </div>
+      </div>
+    </div>
+  {%- endif -%}
+  </div>
+</div>
+
+<script src="{{ 'slick.min.js' | asset_url }}"></script>
+{% schema %}
+  {
+    "name": "Testimonials",
+    "class": "index-section",
+    "max_blocks": 9,
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "small-text",
+        "label": "Small Text"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Testimonials"
+      },
+      {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+      {
+        "type": "select",
+        "id": "align_text",
+        "label": "Text alignment",
+        "default": "center",
+        "options": [
+          {
+            "value": "left", 
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Centered"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+       {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link Label"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+      {
+        "type": "checkbox",
+        "id": "round_images",
+        "label": "Circular images",
+        "info": "Requires square images",
+        "default": true
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "t:sections.all.colors.label",
+        "default": "background-1"
+      },
+      
+      {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+    ],
+    "blocks": [
+      {
+        "type": "testimonial",
+        "name": "Testimonial",
+        "settings": [
+          {
+            "type": "select",
+            "id": "icon",
+            "label": "Icon",
+            "default": "5-stars",
+            "options": [
+              {
+                "value": "none",
+                "label": "None"
+              },
+              {
+                "value": "quote",
+                "label": "Quote"
+              },
+              {
+                "value": "5-stars",
+                "label": "5 stars"
+              },
+              {
+                "value": "4-stars",
+                "label": "4 stars"
+              },
+              {
+                "value": "3-stars",
+                "label": "3 stars"
+              },
+              {
+                "value": "2-stars",
+                "label": "2 stars"
+              },
+              {
+                "value": "1-star",
+                "label": "1 star"
+              }
+            ]
+          },
+          {
+            "type": "richtext",
+            "id": "testimonial",
+            "label": "Text",
+            "default": "<p>Add customer reviews and testimonials to showcase your store’s happy customers.</p>"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Author's image"
+          },
+          {
+            "type": "text",
+            "id": "author",
+            "label": "Author",
+            "default": "Author's name"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Testimonials",
+        "blocks": [
+          {
+            "type": "testimonial"
+          },
+          {
+            "type": "testimonial"
+          },
+          {
+            "type": "testimonial"
+          },
+          {
+            "type": "testimonial"
+          },
+          {
+            "type": "testimonial"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

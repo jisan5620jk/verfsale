@@ -1,0 +1,133 @@
+<style>
+ .mfq_popular_color_card_wrapper{
+   display: flex;gap: 5px;align-items: center;border: 1px solid #c2c2c2;border-radius: 5px;padding: 10px;
+   cursor:pointer;width: fit-content;
+ } 
+ .mfq_popular_color_fill{
+   background: #dddada;width: 26px;height: 28px;border-radius: 5px;border: 1px solid #c2c2c2;
+ }
+ .mfq_popular_color_title{
+   font-size: 14px;font-weight: 600;
+ }
+
+.skeleton-box {
+  width: 150px;
+  height: 35px;
+  border-radius: 4px;
+  background: #eee;
+  animation: skeleton-flash 1.5s infinite ease-in-out;
+  color:transparent;
+}
+
+@keyframes skeleton-flash {
+  0% {
+    background-color: #eee;
+  }
+  50% {
+    background-color: #ddd;
+  }
+  100% {
+    background-color: #eee;
+  }
+}
+  
+</style>
+
+<div id="mfq_popular_colors_list" style="display:flex;flex-wrap:wrap;gap:10px;" >  
+
+  <div class="skeleton-box">r</div>
+
+  <div class="skeleton-box">r</div>
+
+  <div class="skeleton-box">r</div>
+
+  
+</div>
+
+<script>
+jQuery(document).ready(function(){
+  
+  $.ajax({
+        url: 'https://olive-hamster-249045.hostingersite.com/api/popular-colors',
+        type: 'GET',
+        success: function(response) {
+         console.log(response)
+         if(response.popularColors.length > 0){
+          InjectPopularColors(response.popularColors)
+         }else{
+           $('#mfq_populer_color_main_wrapper').fadeOut(200);
+         } 
+        },
+        error: function(error){
+          console.log(error)
+          $('#mfq_populer_color_main_wrapper').fadeOut(200);
+        }
+  });
+
+   function truncateText(str, maxLength) {
+     if (typeof str !== 'string') return '';
+     return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
+   }
+
+ function InjectPopularColors(colors){
+  $('#mfq_popular_colors_list').empty();
+  const isSelectedColor = JSON.parse(localStorage.getItem('selected_color')) || false;
+  colors.forEach((color)=>{
+     $('#mfq_popular_colors_list').append(`
+     <div class="mfq_popular_color_card_wrapper mfq_popular_color_popup_card" style="${isSelectedColor?.id == color.id ? 'border:1px solid #D80077' : ''}" title="${color.name}" d-id="${color.id}" name="${color.name}" range="${color.color_category.range}" hex="${color.hex}" >
+      <span class="mfq_popular_color_fill" style="background:${color.hex}" ></span>
+      <span class="mfq_popular_color_title" >${truncateText(color.name, 20)}</span>
+     </div>     
+     `)
+    });
+    
+    $('.mfq_color_popup_selected_clear').on('click',function(e){
+      e.stopPropagation();
+      window.history.replaceState({}, '', window.location.pathname);
+      localStorage.removeItem('selected_color')
+      $('.color_popup_edit_trg').css('display','none')
+      $('.color_popup_trg').css('display','flex')
+      $('#mfq_popup_selected_product_color').text('')
+      $('#mfq_color_popup_selected').css('display','none')
+      $('.mfq_popup_selected_color').val("")
+      $('.mfq_popular_color_popup_card').css('border','1px solid #c2c2c2') 
+
+      if($('.mfq_popup_selected_color').val() === ''){
+       $('.product-form__submit').attr('disabled',true).css('background','gray')     
+      }
+
+    })  
+  }
+
+   $(document).on('click','.mfq_popular_color_popup_card',function(){
+
+      $('.mfq_popular_color_popup_card').css('border','1px solid #c2c2c2') 
+     
+      let selectedColor = {id:$(this).attr('d-id'),hex:$(this).attr('hex'),name:$(this).attr('name')}
+      localStorage.setItem('selected_color',JSON.stringify(selectedColor))
+
+      $(this).css('border','1px solid #D80077')  
+     
+      $('.mfq_color_popup_name').text(truncateText(selectedColor.name, 6))
+      $('.color_popup_trg').css('display','none')
+      $('.color_popup_edit_trg').css('background',selectedColor.hex).css('display','flex')
+      $('#mfq_color_popup_selected_color').css('background',selectedColor.hex)
+
+      $('#mfq_color_popup_selected_name').text(selectedColor.name)
+      $('#mfq_popup_selected_product_color').text(selectedColor.name)
+      $('#mfq_color_popup_selected').css('display','flex')
+
+      $('.mfq_popup_selected_color').val(selectedColor.name) 
+
+      if($('.mfq_popup_selected_color').val() != ''){
+       $('.product-form__submit').attr('disabled',false).css('background','#ba0066')     
+      }
+      
+    })
+
+    if($('.mfq_popup_selected_color').val() === ''){
+     $('.product-form__submit').attr('disabled',true).css('background','gray')     
+    }
+
+})  
+</script>

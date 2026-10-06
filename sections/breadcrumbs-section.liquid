@@ -1,0 +1,35 @@
+<div class="breadcrumbs-section">
+  <div class="page-width">
+    <div class="breadcrumbs-wrapper">
+      {% render 'breadcrumbs' %}
+
+      {% comment %}
+      <div class="share-social">
+        <div class="share-block">
+          <span>
+            {% liquid
+                  assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
+                  render 'breadcrumbs-share', share_link: share_url
+                %}
+          </span>
+        </div>
+        <div class="social-icons-block">
+          {% render 'social-icons' %}
+        </div>
+      </div>
+      {% endcomment %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Breadcrumbs Section",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Breadcrumbs Section"
+      }
+    ]
+  }
+{% endschema %}

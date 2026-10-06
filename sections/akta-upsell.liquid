@@ -1,0 +1,105 @@
+{{ 'akta-upsell.css' | asset_url |  stylesheet_tag }}
+<div class="akta-upsell">
+  <div class="akta-upsell-container">
+    <div class="akta-upsell-header">
+      <h2 class="akta-upsell-title">{{ section.settings.title }}
+        <span class="title-badge">{{ section.settings.badge_text }}</span>
+      </h2>
+      <p class="akta-upsell-subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+    <div class="akta-upsell-products">
+      {% for block in section.blocks %}
+        {%- assign upProduct = block.settings.product -%}
+        {% if upProduct  %}
+          <div class="akta-upsell-product">
+
+            <div class="akta-upsell-product-img">
+              <img src="{{ upProduct.featured_image |  image_url }}" alt="{{ upProduct.title }}">
+            </div>
+            <div class="akta-upsell-product-content">
+              <h3 class="akta-upsell-product-title">
+              {{ upProduct.title }}
+              </h3>
+              <p class="akta-upsell-product-des">
+              {{ upProduct.description |  truncatewords: 15 |  strip_html }}
+              </p>
+              <div class="akta-upsell-product-action">
+                <div class="akta-upsell-product-price">
+                  {% assign first_variant = upProduct.selected_or_first_available_variant %}
+
+                  {% if first_variant.compare_at_price > first_variant.price %}
+                    <span class="price price--sale">
+                      {{ first_variant.price | money }}
+                    </span>
+
+                    <span class="price price--compare">
+                      {{ first_variant.compare_at_price | money }}
+                    </span>
+                  {% else %}
+                    <span class="price price--regular">
+                      {{ first_variant.price | money }}
+                    </span>
+                  {% endif %}
+                </div>
+                <button class="akta-upsell-product-btn" type="button">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.33203 7.99805H12.6631" stroke="#0A0A0A" stroke-width="1.33301" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7.99805 3.33252V12.6636" stroke="#0A0A0A" stroke-width="1.33301" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+
+                  Add
+                </button>
+
+              
+              </div>   
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Akta Upsell",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default":"Optional tools you may need"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Optional"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default":"Professional tools to make your application easier and achieve the best results"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Add Product",
+      "type": "product",
+      "settings": [
+         {
+           "type": "product",
+           "id": "product",
+           "label": "Select Product"
+         },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Akta Upsell"
+    }
+  ]
+}
+{% endschema %}

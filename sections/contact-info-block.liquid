@@ -1,0 +1,146 @@
+<section class="contact-info-section" style="background: {{ section.settings.bg_color }};padding:60px 0;">
+  <div class="page-width" style="max-width:1200px;">
+    <div class="grid grid--1-col grid--2-col-tablet" style="align-items:center;">
+
+      <!-- LEFT TEXT -->
+      <div class="grid__item">
+        <h2 class="h2">{{ section.settings.heading }}</h2>
+        <div class="rte mt-3">
+          {{ section.settings.subtext }}
+        </div>
+      </div>
+
+      <!-- RIGHT CONTACT ITEMS -->
+      <div class="grid__item">
+        <div >
+
+          {% for block in section.blocks %}
+            <a 
+              {% if block.settings.url != blank %}
+                href="{{ block.settings.url }}"
+              {% else %}
+                role="link"
+              {% endif %}
+              class="contact-item grid grid--2-col align-center"
+              style="padding: 1.2rem 1rem; border-bottom: 1px solid rgba(0,0,0,0.08); text-decoration:none; color:inherit;"
+            >
+              <div class="flex align-center">
+                
+                <!-- ICON -->
+                {% case block.settings.icon %}
+                  {% when 'phone' %}
+                    <span>
+                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.856 13.144C9.686 11.974 8.804 10.664 8.218 9.335C8.094 9.054 8.167 8.725 8.384 8.508L9.203 7.69C9.874 7.019 9.874 6.07 9.288 5.484L8.114 4.31C7.333 3.529 6.067 3.529 5.286 4.31L4.634 4.962C3.893 5.703 3.584 6.772 3.784 7.832C4.278 10.445 5.796 13.306 8.245 15.755C10.694 18.204 13.555 19.722 16.168 20.216C17.228 20.416 18.297 20.107 19.038 19.366L19.689 18.715C20.47 17.934 20.47 16.668 19.689 15.887L18.516 14.714C17.93 14.128 16.98 14.128 16.395 14.714L15.492 15.618C15.275 15.835 14.946 15.908 14.665 15.784C13.336 15.197 12.026 14.314 10.856 13.144Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </span>
+                  {% when 'email' %}
+                    <span>
+                        <svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 6.8V6.8C3 7.4 3.3 7.9 3.8 8.3L9.8 12.4C11.2 13.3 12.9 13.3 14.3 12.4L20.3 8.4C20.7 7.9 21 7.4 21 6.8V6.8C21 5.8 20.2 5 19.2 5H4.8C3.8 5 3 5.8 3 6.8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 7V17C3 18.1 3.9 19 5 19H19C20.1 19 21 18.1 21 17V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.588 18.412L9.682 12.318" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.36 12.36L20.412 18.412" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </span>
+                  {% when 'whatsapp' %}
+                    <span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.204 5.762C16.558 4.115 14.369 3.207 12.037 3.206C7.23 3.206 3.319 7.115 3.318 11.92C3.316 13.449 3.717 14.952 4.481 16.277L3.244 20.793L7.866 19.581C9.145 20.277 10.577 20.642 12.033 20.642H12.037C16.842 20.642 20.753 16.732 20.755 11.927C20.756 9.599 19.85 7.41 18.204 5.762Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M13.095 13.56L13.501 13.157C13.874 12.787 14.464 12.74 14.894 13.042C15.31 13.334 15.686 13.596 16.036 13.84C16.592 14.226 16.659 15.018 16.18 15.496L15.821 15.855" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.145 8.179L8.504 7.82C8.982 7.342 9.774 7.409 10.16 7.964C10.403 8.314 10.665 8.69 10.958 9.106C11.26 9.536 11.214 10.126 10.843 10.499L10.44 10.905" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15.821 15.855C14.34 17.329 11.851 16.077 9.886 14.111" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9.88801 14.114C7.92301 12.148 6.67101 9.66 8.14501 8.179" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.44 10.905C10.759 11.408 11.168 11.906 11.63 12.368L11.632 12.37C12.094 12.832 12.592 13.241 13.095 13.56" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </span>
+                {% endcase %}
+
+                <span class="ml-2" style="font-weight:600;">{{ block.settings.label }}</span>
+              </div>
+
+              <div class="flex justify-end">
+                <span class="mr-2">{{ block.settings.value }}</span>                
+          {{ 'icon-arrow.svg' | inline_asset_content }}
+              </div>
+            </a>
+          {% endfor %}
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-item:hover {
+    background: rgba(0,0,0,0.05);
+  }
+.contact-item .flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.contact-item span svg {
+    display: block;
+}
+.contact-item {
+    justify-content: space-between;
+}
+</style>
+
+{% schema %}
+{
+  "name": "Contact info block",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Kunnen we je ergens mee helpen?"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "<p>We zijn elke werkdag bereikbaar tussen <strong>08:00</strong> en <strong>22:00</strong> en op zaterdag en zondag tussen <strong>12:00</strong> en <strong>16:00</strong>.</p>"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#F9F9F9"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "contact_item",
+      "name": "Contact item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "phone", "label": "Phone" },
+            { "value": "email", "label": "Email" },
+            { "value": "whatsapp", "label": "WhatsApp" }
+          ],
+          "default": "phone"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Title",
+          "default": "WhatsApp"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "+31 850 870 490"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Contact info block",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

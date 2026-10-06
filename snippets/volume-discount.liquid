@@ -1,0 +1,171 @@
+{% assign show_volume_discount = false %}
+{% for variant in product.variants %}
+  {% assign volume_dis_data = variant.metafields.custom.volume_discount_data.value %}
+
+  {% if volume_dis_data != blank %}
+    {% for item in volume_dis_data %}
+      {% assign show_volume_discount = true %}
+      {% break %}
+    {% endfor %}
+  {% endif %}
+
+  {% if show_volume_discount %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+{% if show_volume_discount %}
+  <div class="volume-discount-section">
+    <span class="vol-discount-title"><font style="vertical-align: inherit;">{{ discount-title }}</font></span>
+    <div class="radio-group">
+      {% for variant in product.variants %}
+        <div class="radio_btns_discount{% if product.selected_or_first_available_variant.id == variant.id %}{% else %} hide{% endif %}" data-id="{{ variant.id }}">
+          {% assign volume_dis_data = variant.metafields.custom.volume_discount_data.value %}
+          {% for data in volume_dis_data %}
+            <div class="radio-wrapper">
+              <label class="radio-option">
+                <input type="radio" name="pricing" value="{{ data.quantity }}" />
+                <span class="custom-radio">
+                  <svg viewBox="0 0 14 14" class="check-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 4L6 9L3 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span class="label-text">{{ data.volume_discount_content | metafield_tag }}</span>
+              </label>
+              {% if data.discount_message %}
+               <span class="discount_per_msg">{{ data.discount_message }}</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+<style>
+.radio-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.radio_btns_discount {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.radio_btns_discount.hide {
+  display: none;
+}
+
+.radio-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 140px;
+}
+
+.radio-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+  min-height: auto;
+}
+.label-text {
+	font-size: 14px;
+	line-height: 17px;
+}
+.metafield-rich_text_field {
+	padding: 0px;
+	line-height: 17px;
+	margin: 0px;
+}
+.radio-wrapper p {
+	margin: 0px;
+	padding: 0px !important;
+}
+.radio-option:hover {
+  border-color: #000;
+}
+
+.radio-option input {
+  display: none;
+}
+
+.custom-radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #888;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  margin-right: 8px;
+}
+
+.check-icon {
+  width: 14px;
+  height: 14px;
+  display: none;
+}
+
+.radio-option input:checked + .custom-radio {
+  background-color: #ba0066;
+  border-color: #ba0066;
+}
+
+.radio-option input:checked + .custom-radio .check-icon {
+  display: block;
+}
+
+.label-text {
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.discount_per_msg {
+  font-size: 14px;
+  color: red;
+  margin-left: 2px;
+  font-weight: 500;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const variantSelect = document.querySelector('.product__info-wrapper [name="id"]');
+  if (variantSelect) {
+    variantSelect.addEventListener('change', function () {
+      const selectedId = this.value;
+      document.querySelectorAll('.radio_btns_discount').forEach(el => {
+        el.classList.add('hide');
+      });
+      const match = document.querySelector(`.radio_btns_discount[data-id="${selectedId}"]`);
+      if (match) {
+        match.classList.remove('hide');
+      }
+    
+    });
+  }
+
+  document.querySelectorAll('.radio_btns_discount').forEach(function (group) {
+    group.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+      radio.addEventListener('click', function () {
+        const value = this.value;
+        console.log('Selected value:', value);
+        const qtyInput = document.querySelector('.product__info-wrapper .quantity__input');
+        if (qtyInput) qtyInput.value = value;
+      });
+    });
+  });
+});
+</script>

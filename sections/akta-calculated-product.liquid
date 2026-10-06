@@ -1,0 +1,66 @@
+{{ 'akta-calculated.css' |  asset_url |  stylesheet_tag }}
+<div class="akta-calculated-product">
+  <div class="calculated-container">
+    <div class="akta-calculated-header">
+      <span class="calculated-badge">Calculated for <span class="badge_number" >10</span> m²</span>
+      <h2 class="calculated-title">{{ section.settings.title }}</h2>
+      <p class="calculated-subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+    <div class="akta-calculated-products">
+      {% for block in section.blocks %}
+        {%- assign product = block.settings.product -%}
+         <div class="akta-calculated-product">
+         <div class="calculated-product-image">
+            <img src="{{ product.featured_image |  image_url  }}" alt="{{ product.titel }}">
+         </div>
+         <div class="calculated-product-content">
+          <h3 class="calculated-product-title">{{ product.title }}</h3>
+          <p class="calculated-product-description">{{ product.description |  truncatewords: 15 |  strip_html }}</p>
+
+         </div>
+         </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Akta Calculated Product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Your recommended system"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Based on your surface area, here's everything you need for professional waterproofing"
+
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Akta Calculated Product"
+    }
+  ]
+}
+{% endschema %}

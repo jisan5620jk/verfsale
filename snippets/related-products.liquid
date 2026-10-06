@@ -1,0 +1,30 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'section-related-products.css' | asset_url | stylesheet_tag }}
+
+<div class="color-scheme-1 gradient">
+  <product-recommendations
+    class="related-products"
+    data-url="{{ routes.product_recommendations_url }}?limit=50"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ product.id }}"
+  >
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      <ul
+        class="grid product-grid grid--4-col-desktop grid--2-col-tablet-down"
+        role="list"
+      >
+        {% assign skip_card_product_styles = false %}
+        {% for recommendation in recommendations.products %}
+          <li class="grid__item">
+            {% render 'card-product',
+              card_product: recommendation
+            %}
+          </li>
+          {%- assign skip_card_product_styles = true -%}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </product-recommendations>
+
+</div>

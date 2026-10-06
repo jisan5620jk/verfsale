@@ -1,0 +1,317 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "trust_badges_MwEHFc": {
+      "type": "trust-badges",
+      "blocks": {
+        "badge_BGHcAR": {
+          "type": "badge",
+          "settings": {
+            "before_text": "",
+            "highlight_text": "Gratis verzending",
+            "after_text": "vanaf €50"
+          }
+        },
+        "badge_8VCBxr": {
+          "type": "badge",
+          "disabled": true,
+          "settings": {
+            "before_text": "",
+            "highlight_text": "",
+            "after_text": ""
+          }
+        },
+        "badge_i6GDmi": {
+          "type": "badge",
+          "disabled": true,
+          "settings": {
+            "before_text": "Professionele",
+            "highlight_text": "kwaliteit",
+            "after_text": ""
+          }
+        },
+        "badge_Hrtgxx": {
+          "type": "badge",
+          "settings": {
+            "before_text": "Altijd de",
+            "highlight_text": "scherpste prijs",
+            "after_text": ""
+          }
+        },
+        "badge_TpdVwR": {
+          "type": "badge",
+          "settings": {
+            "before_text": "",
+            "highlight_text": "Voor 21:59 besteld,",
+            "after_text": "zelfde dag verzonden*"
+          }
+        }
+      },
+      "block_order": [
+        "badge_BGHcAR",
+        "badge_8VCBxr",
+        "badge_i6GDmi",
+        "badge_Hrtgxx",
+        "badge_TpdVwR"
+      ],
+      "settings": {
+        "margin_top": 16,
+        "margin_bottom": 16
+      }
+    },
+    "custom_waterproof_feature_z7hC7J": {
+      "type": "custom-waterproof-feature",
+      "name": "Waterproof Feature",
+      "settings": {
+        "bg_gradient": "linear-gradient(135deg, rgba(24, 29, 66, 1), rgba(74, 28, 82, 1) 50%, rgba(153, 0, 94, 1) 100%)",
+        "text_color": "#ffffff",
+        "badge_text": "Professional waterproofing solution",
+        "heading": "Are you looking for a waterproof floor solution for rising damp?",
+        "description": "<p>In many older buildings, rising damp affects not only the walls but also the floors. Because exterior sealing is usually not possible, this must be done from the inside. However, a thick, multi-layered construction is often not an option, as it reduces the available ceiling height.</p>",
+        "box_bg_color": "#ffffff1a",
+        "box_heading": "Remmers WP Flow easily solves this problem",
+        "box_description": "This innovative system combines sealing and leveling in a single layer. The floor is waterproofed and leveled in a single application.",
+        "image": "shopify://shop_images/Image_3_eaa639e5-41eb-4d13-842a-92323662afb4.png"
+      }
+    },
+    "akta_calculated_product_9hE6yx": {
+      "type": "akta-calculated-product",
+      "blocks": {
+        "product_dEraW6": {
+          "type": "product",
+          "settings": {
+            "product": "anza-verfrolbeugels"
+          }
+        },
+        "product_HCwtpV": {
+          "type": "product",
+          "settings": {
+            "product": "anza-pro-super-antex-microfiber-verfroller"
+          }
+        },
+        "product_WfcnXx": {
+          "type": "product",
+          "settings": {
+            "product": "anza-verfbak"
+          }
+        },
+        "product_wgQtVR": {
+          "type": "product",
+          "settings": {
+            "product": "anza-super-tough-platte-kwast"
+          }
+        }
+      },
+      "block_order": [
+        "product_dEraW6",
+        "product_HCwtpV",
+        "product_WfcnXx",
+        "product_wgQtVR"
+      ],
+      "name": "Akta Calculated Product",
+      "settings": {
+        "title": "Your recommended system",
+        "subtitle": "Based on your surface area, here's everything you need for professional waterproofing"
+      }
+    },
+    "akta_upsell_dUMiyP": {
+      "type": "akta-upsell",
+      "blocks": {
+        "product_hUJMAt": {
+          "type": "product",
+          "settings": {
+            "product": "anza-super-soft-platte-kwast"
+          }
+        },
+        "product_8MFWBq": {
+          "type": "product",
+          "settings": {
+            "product": "anza-super-soft-platte-kwast"
+          }
+        },
+        "product_xcHdLq": {
+          "type": "product",
+          "settings": {
+            "product": "anza-super-soft-platte-kwast"
+          }
+        }
+      },
+      "block_order": [
+        "product_hUJMAt",
+        "product_8MFWBq",
+        "product_xcHdLq"
+      ],
+      "name": "Akta Upsell",
+      "settings": {
+        "title": "Optional tools you may need",
+        "badge_text": "Optional",
+        "subtitle": "Professional tools to make your application easier and achieve the best results"
+      }
+    },
+    "video_steps_guide_3cVmB3": {
+      "type": "video-steps-guide",
+      "blocks": {
+        "step_ECBQMf": {
+          "type": "step",
+          "settings": {
+            "title": "Surface Preparation",
+            "description": "Learn how to properly prepare your floor"
+          }
+        },
+        "step_rME8Gq": {
+          "type": "step",
+          "settings": {
+            "title": "Application Technique",
+            "description": "See the correct application method"
+          }
+        },
+        "step_FetxU3": {
+          "type": "step",
+          "settings": {
+            "title": "Final Finishing",
+            "description": "Complete the waterproofing process"
+          }
+        }
+      },
+      "block_order": [
+        "step_ECBQMf",
+        "step_rME8Gq",
+        "step_FetxU3"
+      ],
+      "name": "Video Guide & Steps",
+      "settings": {
+        "bg_color": "#fdfdfd",
+        "heading": "See how WP Flow works",
+        "heading_color": "#b9005e",
+        "subtext": "Watch this step-by-step video guide to understand the complete application process",
+        "text_color": "#555555",
+        "video_poster": "shopify://shop_images/Video_Box.png",
+        "play_icon_color": "#2067b2",
+        "video_text_overlay": "Remmers bouwsystemen<br>Vloerafdichting met WP Flow",
+        "video_cta_text": "Watch Application Tutorial",
+        "video_duration": "5 minutes",
+        "video_url_type": "youtube",
+        "video_id": "ScMzIvxBSi4",
+        "mp4_url": "",
+        "step_circle_bg": "#fce4ec",
+        "step_circle_text": "#b9005e",
+        "step_heading_color": "#b9005e",
+        "step_desc_color": "#666666"
+      }
+    },
+    "akta_accordion_PNhxNA": {
+      "type": "akta-accordion",
+      "blocks": {
+        "accordion_item_66A7aP": {
+          "type": "accordion_item",
+          "settings": {
+            "item_title": "Surface Preparation",
+            "item_sub_title": "Proper preparation is crucial for optimal adhesion and long-lasting results.",
+            "content_img": "shopify://shop_images/Screenshot_1.jpg",
+            "content": "<p><strong>Key points:</strong></p><ul><li>Remove all loose material, dust, and debris</li><li>Repair any cracks or damage to the substrate</li><li>Ensure surface is completely dry (max 4% moisture)</li><li>Clean with a degreasing agent if necessary</li></ul>"
+          }
+        },
+        "accordion_item_xg3Q6U": {
+          "type": "accordion_item",
+          "settings": {
+            "item_title": "Primer Application",
+            "item_sub_title": "The primer creates a strong bond between the substrate and waterproofing system.",
+            "content_img": "shopify://shop_images/Screenshot_1.jpg",
+            "content": "<p><strong>Key points:</strong></p><ul><li>Remove all loose material, dust, and debris</li><li>Repair any cracks or damage to the substrate</li><li>Ensure surface is completely dry (max 4% moisture)</li><li>Clean with a degreasing agent if necessary</li></ul>"
+          }
+        },
+        "accordion_item_T9Fe3e": {
+          "type": "accordion_item",
+          "settings": {
+            "item_title": "Reinforcement Mesh Installation",
+            "item_sub_title": "Apply mesh to corners, joints, and transitions for added strength.",
+            "content_img": "shopify://shop_images/Screenshot_1.jpg",
+            "content": "<p><strong>Key points:</strong></p><ul><li>Remove all loose material, dust, and debris</li><li>Repair any cracks or damage to the substrate</li><li>Ensure surface is completely dry (max 4% moisture)</li><li>Clean with a degreasing agent if necessary</li></ul>"
+          }
+        },
+        "accordion_item_kpQPHT": {
+          "type": "accordion_item",
+          "settings": {
+            "item_title": "First Coat - Sealing Compound",
+            "item_sub_title": "Apply the first coat of waterproofing membrane to the entire surface.",
+            "content_img": "shopify://shop_images/Screenshot_1.jpg",
+            "content": "<p><strong>Key points:</strong></p><ul><li>Remove all loose material, dust, and debris</li><li>Repair any cracks or damage to the substrate</li><li>Ensure surface is completely dry (max 4% moisture)</li><li>Clean with a degreasing agent if necessary</li></ul>"
+          }
+        },
+        "accordion_item_cUCEKc": {
+          "type": "accordion_item",
+          "settings": {
+            "item_title": "Second Coat - Sealing Compound",
+            "item_sub_title": "Apply a second coat perpendicular to the first for complete coverage.",
+            "content_img": "shopify://shop_images/Screenshot_1.jpg",
+            "content": "<p><strong>Key points:</strong></p><ul><li>Remove all loose material, dust, and debris</li><li>Repair any cracks or damage to the substrate</li><li>Ensure surface is completely dry (max 4% moisture)</li><li>Clean with a degreasing agent if necessary</li></ul>"
+          }
+        },
+        "accordion_item_iQehP7": {
+          "type": "accordion_item",
+          "settings": {
+            "item_title": "Topcoat Application",
+            "item_sub_title": "Seal and protect the waterproofing membrane with the final topcoat.",
+            "content_img": "shopify://shop_images/Screenshot_1.jpg",
+            "content": "<p><strong>Key points:</strong></p><ul><li>Remove all loose material, dust, and debris</li><li>Repair any cracks or damage to the substrate</li><li>Ensure surface is completely dry (max 4% moisture)</li><li>Clean with a degreasing agent if necessary</li></ul>"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_item_66A7aP",
+        "accordion_item_xg3Q6U",
+        "accordion_item_T9Fe3e",
+        "accordion_item_kpQPHT",
+        "accordion_item_cUCEKc",
+        "accordion_item_iQehP7"
+      ],
+      "name": "Akta Accordion",
+      "settings": {
+        "title": "Detailed application steps",
+        "subtitle": "Step-by-step instructions for professional results",
+        "link_url": "",
+        "btn_text": "Download Instructions"
+      }
+    },
+    "technical_support_banner_pwiJwi": {
+      "type": "technical-support-banner",
+      "name": "Technical Support Card",
+      "settings": {
+        "section_bg": "#eff5ff",
+        "card_bg": "#eef2fb",
+        "primary_color": "#b9005e",
+        "text_color": "#4a5568",
+        "deco_color": "#2067b2",
+        "heading": "Do you have a technical question?",
+        "description": "Our team of waterproofing experts is here to help you get the best results. Whether you need product advice or application guidance, we're just a call away.",
+        "phone_label": "Call us",
+        "phone_display": "+1 (234) 567-890",
+        "phone_number": "+1234567890",
+        "email_label": "Email us",
+        "email_address": "support@wpflow.com",
+        "chat_text": "Start a live chat",
+        "chat_url": "",
+        "image": "shopify://shop_images/Rectangle_1.png",
+        "footer_bg": "#5dad40",
+        "footer_text": "Our experts are happy to help • Available Mon-Fri 8AM-6PM • Free technical consultation"
+      }
+    }
+  },
+  "order": [
+    "trust_badges_MwEHFc",
+    "custom_waterproof_feature_z7hC7J",
+    "akta_calculated_product_9hE6yx",
+    "akta_upsell_dUMiyP",
+    "video_steps_guide_3cVmB3",
+    "akta_accordion_PNhxNA",
+    "technical_support_banner_pwiJwi"
+  ]
+}

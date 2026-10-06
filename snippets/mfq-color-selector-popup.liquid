@@ -1,0 +1,1023 @@
+<style>
+ .suggestion_item:hover{
+    background: #ebebeb;
+  }
+
+
+ .no-contact-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+.no-btn {
+background: linear-gradient(90deg, #fe7abb 6.36%, #e42784 100%);
+    color: white;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 4px;
+    display: flex;
+    width: fit-content;
+    gap: 5px;
+}
+
+/* Desktop: 3 columns */
+@media (min-width: 768px) {
+  .no-contact-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.no-card {
+  padding: 16px 14px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+}
+
+.no-card .no-title {
+  display: block;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.no-card .no-desc {
+  display: block;
+  font-size: 13px;
+  color:#97677e;
+}
+
+
+    .filter_color_trg_icon{
+     display: none;
+     align-items: center;
+     justify-content: center;
+     z-index: 40;
+     position: absolute;
+     background: transparent;
+     width: 26px;
+     height: 22px;
+     border-radius: 3px;
+   }
+   .main_color_trg_icon_dot{
+     background: rgba(255, 255, 255, 0.9);
+     width: 20px;
+     height: 20px;
+     border-radius: 20px;
+   }
+   .filter_color_trg{
+     height: 22px;
+     width: 26px;
+     background: white;
+     border: 1px solid #aeaeae;
+     border-radius: 2px;
+     cursor:pointer;
+     position:relative
+   }
+  #mfq_color_popup_wrapper,#mfq_color_sub_popup_wrapper,#mfq_color_info_popup_wrapper{
+     display: none;
+     align-items: center;
+     justify-content: center;
+     height: 100%;
+     width: 100%;
+     position: fixed;
+     background: rgba(0, 0, 0, .1);
+     top: 0px;
+     z-index: 100;
+  }
+  #mfq_color_sub_popup_wrapper{
+    z-index: 101 !important;
+  }
+  #mfq_color_sub_popup_wrapper{
+    z-index: 102 !important;
+  }
+ 
+ #mfq_color_popup_wrapper_inner{
+     background: white;
+     width: 95%;
+     height: 86%;
+     border-radius: 10px;
+     position:relative;
+ }
+
+ #mfq_color_sub_popup_wrapper_inner{
+     background: white;
+     width: 80%;
+     height: 86%;
+     border-radius: 10px;
+     position:relative;
+ }
+ 
+  #mfq_color_info_popup_wrapper_inner{
+     background: white;
+     width: 80%;
+     height: 70%;
+     border-radius: 10px;
+     position:relative;
+ }
+ 
+ #mfq_color_popup_close,#mfq_color_sub_popup_close{
+     font-weight: 700;
+     color: white;
+     background: #D80077;
+     padding: 2px 7px;
+     border-radius: 17px;
+     font-size: 12px;
+     cursor: pointer;
+     height: fit-content;
+ }
+ 
+ #mfq_color_popup_filters_wrapper{
+     display: flex;
+     background: white;
+     justify-content: space-between;
+     padding: 10px 20px;
+       gap: 16px;
+ }
+   
+ .mfq_color_popup_filter_cards{
+     display: flex;
+     background: #f1f1f1;
+     width: 33%;
+     border-radius: 3px;
+     padding: 20px;
+     flex-direction: column;
+     gap: 12px;
+     height: fit-content;
+ }  
+ 
+ #mfq_color_popup_inner_col{
+     padding: 12px 0px;
+     height: 100%;
+     display: flex;
+     flex-direction: column;
+     border-radius: 0px 0px 12px 12px;
+ }  
+ 
+ #mfq_color_popup_colors_list{
+     position:relative;
+     display: flex;
+     flex-wrap:wrap;
+     height: calc(100% - 246px);
+     overflow-x:hidden;
+     overflow-y: scroll;
+     margin: 4px 20px;
+     gap: 14px;
+     align-content: flex-start;
+ }
+ 
+ .mfq_color_popup_card{
+    height: 110px;
+    min-width: 100px;
+    max-width: 160px;
+    flex: 1 1 150px;
+    display: flex;
+    border-radius: 6px;
+    border: 1px solid #d2d1d1;
+    flex-direction: column;
+   cursor:pointer;
+ }
+ 
+   .mfq_color_popup_filters_mob{
+     display:none !important;
+   }
+
+    #mfq_color_sub_popup_mockups{
+     display: flex;
+     width: 100%;
+     gap: 20px;
+    }
+  .mfq_color_sub_popup_mockup_image{
+    width: 50%;
+    border-radius: 5px;
+  }
+  
+  .mfq_color_sub_popup_mockup_images{
+    width: 44%;
+    border-radius: 5px;
+  }
+
+ .mfq_color_sub_popup_mockup_image > img{
+    border-radius: 5px;
+  }
+
+  .mfq_color_sub_popup_mockup_images > img{
+    border-radius: 5px;
+  }
+
+  #mfq_color_sub_popup_trg{
+    background: #BA0066;
+    border: none;
+    color: white;
+    font-weight: 700;
+    width: fit-content;
+    padding: 10px;
+    border-radius: 6px;
+    align-self: center;
+    transition: background 0.4s ease;
+    cursor:pointer;
+  }
+  /* #mfq_color_sub_popup_trg:hover{
+    background: linear-gradient(135deg, #80c1e7,#D80077 );
+  } */
+  
+  #mfq_color_popup_selected{
+    background: rgb(250 88 178 / 20%);
+    padding: 5px 10px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  #mfq_color_popup_header_text{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #mfq_color_popup_selected{
+    display:none;
+  }
+
+  #mfq_color_sub_popup_mockup_images_wrap{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 50%;
+    height: fit-content;
+    justify-content: center;
+  }
+  
+
+   @keyframes rotateInfinite {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.infinite-loop {
+  animation: rotateInfinite 3s linear infinite;
+}
+  
+  @media (max-width: 1024px) {
+   .mfq_color_popup_filters_desktop{
+     display:none !important;
+   } 
+   .mfq_color_popup_filters_mob{
+     display:flex !important;
+     flex-direction: column;
+     gap: 10px;
+     margin: 5px 14px;
+   }
+   #mfq_color_popup_colors_list{
+         margin: 4px 12px !important;
+     flex-wrap:wrap;
+     height: calc(100% - 270px);
+   } 
+    #mfq_color_popup_header_text{
+     flex-direction: column; 
+     align-items: start;
+    }
+
+    #mfq_color_info_popup_conatiner{
+          flex-direction: column-reverse;
+    }
+    #mfq_color_info_popup_col2,#mfq_color_info_popup_col2{
+      width:100%
+    }
+
+    #mfq_color_sub_popup_mockups{
+     overflow-x: scroll;
+     overflow-y: hidden;
+    }
+
+    .mfq_color_sub_popup_mockup_image{
+          min-width: 100%;
+    }
+
+    #mfq_color_sub_popup_mockups{
+     display: flex;
+     flex-direction:column;
+    }
+
+    #mfq_color_sub_popup_mockup_images_wrap{
+      width:100%;
+      gap:10px;
+      flex-wrap:nowrap;
+    }
+
+    #mfq_color_sub_popup_wrapper_2{
+     padding: 10px 10px 16px 16px !important; 
+    } 
+
+    #mfq_color_sub_popup_wrapper_inner{
+      width:94%;
+      overflow-y:scroll;
+    }
+
+    .mfq_color_sub_popup_mockup_images {
+      width: 27% !important;
+    }
+
+    #mfq_color_popup_nav{
+      overflow:scroll;
+      height:35px;
+    }    
+    
+  } 
+   
+ </style>
+ 
+ 
+ <div id="mfq_color_popup_wrapper" >
+
+  <div id="mfq_color_info_popup_wrapper" >
+    <div id="mfq_color_info_popup_wrapper_inner" >
+     
+     <div id="mfq_color_info_popup_header" style="display: flex;width: 100%;justify-content: space-between;padding: 10px 24px;border-bottom: 1px solid #d2d1d1;align-items: center;" >
+       <span style="font-weight: 700;font-size: 22px;color: #D80077;" >Kleuren informatie</span>
+       <span id="mfq_info_popup_close" style="cursor:pointer;" >X</span>
+     </div>
+
+     <div id="mfq_color_info_popup_conatiner" style="display: flex;overflow: scroll;height: calc(100% - 58px);padding: 10px 12px;gap: 10px;" >
+      <div id="mfq_color_info_popup_col1" style="font-size:12px;width:100%" >
+       <div style="display:flex;flex-direction:column;" >
+        <span style="font-weight: 700;" >Ontdek jouw kleur op de muur</span>
+        <p>
+          Met onze kleurentool krijg je direct een realistisch beeld van hoe jouw favoriete kleur eruitziet op de muur. Bekijk in onze voorbeeldruimtes hoe de kleur tot leven komt in verschillende interieurs. Zo krijg je snel een goed idee van de sfeer die een kleur kan brengen in jouw huis.
+        </p>
+       </div>
+
+       <div style="display:flex;flex-direction:column;" >
+        <span style="font-weight: 700;" >Jouw kleur, jouw product</span> 
+        <p>Vrijwel alle kleuren uit bekende kleurwaaiers zijn bij ons te realiseren. Denk aan kleuren uit de Flexa-, Histor- of Sikkens-waaier. Met onze mengservice brengen we jouw favoriete kleur tot leven, precies zoals jij het voor ogen hebt.</p> 
+       </div> 
+
+       <div style="display:flex;flex-direction:column;" >
+        <span style="font-weight: 700;" >Beperkingen in kleuren en volumes</span> 
+        <p>Let op: sommige kleuren zijn technisch niet mogelijk om te mengen, zoals metallic-, fluoriserende- of parelmoertinten. Een aantal bekende voorbeelden hiervan zijn bepaalde kleuren uit de RAL-waaier, waaronder:</p>
+        <p>RAL 1026, 1035, 2005, 2007, 2013, 3024, 3026, 3032, 3033, 4011, 4012, 5025, 5026, 6035, 6036, 6038, 7048, 8029, 9006, 9007, 9022, 9023.</p>
+       </div>
+
+       <div style="display:flex;flex-direction:column;" >
+        <span style="font-weight: 700;" >Persoonlijk advies nodig?</span> 
+        <p>Twijfel je over welke kleur het beste past of dat er een specifieke combinatie mogelijk is? Ons kleurenteam staat voor je klaar! Neem gerust contact op via info@verfsale.com of vul ons contactformulier in voor persoonlijk kleuradvies.</p>
+       </div> 
+
+       <div style="display:flex;flex-direction:column;" >
+        <span style="font-weight: 700;" >Maatwerk: niet retourneerbaar</span> 
+        <p>Alle verf die wij speciaal op kleur mengen, valt onder maatwerk. Dit geldt voor alle kleuren met een naam of kleurnummer, dus ook voor veelgebruikte tinten zoals RAL 9010 of RAL 9016. Omdat deze producten op aanvraag worden gemengd, kunnen ze niet worden geretourneerd.</p>
+       </div> 
+
+        
+      </div>
+      <!--<img style="width:40%" id="mfq_color_info_popup_col2" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/information.jpg?v=1746043199" />--> 
+     </div> 
+      
+    </div>
+  </div> 
+   
+
+  <div id="mfq_color_sub_popup_wrapper" >
+    <div id="mfq_color_sub_popup_wrapper_inner" >
+     
+     <div id="mfq_color_sub_popup_header" style="display: flex;width: 100%;justify-content: space-between;padding: 5px 24px;border-bottom: 1px solid #d2d1d1;align-items: center;" >
+      <div style="display: flex;flex-direction: column;" >
+       <span id="mfq_color_sub_popup_range" style="font-weight: 700;font-size: 22px;color: #D80077;" >Meest gebruikte kleuren</span>
+       <span id="mfq_color_sub_popup_name" style="font-weight: 500;font-size: 16px;color: #a1a1a1;" >Standaard wit (ongemengd)</span>
+      </div>
+       
+      <span id="mfq_color_sub_popup_close" style="cursor:pointer;" >X</span>
+     </div>
+
+    <div id="mfq_color_sub_popup_wrapper_2" style="display: flex;flex-direction: column;padding: 16px 0px 0px 16px;" >
+      
+     <div id="mfq_color_sub_popup_mockups" >
+      <div class="mfq_color_sub_popup_mockup_image" ><img class="mfq_color_sub_popup_mockup_image_placeholder" style="width: 100%;height: 100%;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/1.png?v=1749237159" /></div>
+      <div id="mfq_color_sub_popup_mockup_images_wrap" >
+       <div class="mfq_color_sub_popup_mockup_images" ><img class="mfq_color_sub_popup_mockup_image_option" style="width:100%;height:100%;cursor:pointer" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/1.png?v=1749237159" /></div>
+       <div class="mfq_color_sub_popup_mockup_images" ><img class="mfq_color_sub_popup_mockup_image_option" style="width:100%;height:100%;cursor:pointer" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/4.png?v=1749242577" /></div> 
+       <div class="mfq_color_sub_popup_mockup_images" ><img class="mfq_color_sub_popup_mockup_image_option" style="width:100%;height:100%;cursor:pointer" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/3.png?v=1749238721" /></div> 
+       <div class="mfq_color_sub_popup_mockup_images" ><img class="mfq_color_sub_popup_mockup_image_option" style="width:100%;height:100%;cursor:pointer" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/mockup-2_d0f1dbf3-2e69-4dd8-a74d-b14ce7425cf6.png?v=1749242432" /></div> 
+      </div> 
+     </div>
+     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;" >
+     <p class="universal_desclaimer" style="font-size: 14px;text-align: center;" >Kleuren op het beeldscherm dienen ter inspiratie. Alleen officiële kleurstalen zijn kleurecht. <!--Wil je een voorproefje? <span style="color:#D80077;text-decoration: underline;" >Bestel hier een tester.</span>--></p> 
+     <button type="button" id="mfq_color_sub_popup_trg" >Kies deze kleur</button> 
+     <p class="puro_desclaimer" style="display:none;font-size: 14px;text-align: center;" >*Kleuren uit het Puro assortiment zijn uitsluitend te gebruiken met Puro producten.</p> 
+     </div>  
+    </div>  
+      
+    </div>
+  </div> 
+  
+  <div id="mfq_color_popup_wrapper_inner" >
+ 
+   <div id="mfq_color_popup_header" style="display: flex;width: 100%;justify-content: space-between;padding: 10px 24px;border-bottom: 1px solid #d2d1d1;align-items: center;" >
+     <div id="mfq_color_popup_header_text" >
+      <span style="font-weight: 700;font-size: 22px;color: #D80077;" >Kies je gewenste kleur</span>
+      <div id="mfq_color_popup_selected" >
+        <span id="mfq_color_popup_selected_color" style="border: 1px solid gray;width: 16px;height: 16px;border-radius: 10px;" ></span>
+        <span id="mfq_color_popup_selected_name" style="font-size: 12px;" >RAL 9003 Signaalwit</span>
+        <span class="mfq_color_popup_selected_clear" style="font-size: 12px;cursor:pointer" >X</span></div>
+     </div>
+     <span id="mfq_color_popup_close" style="cursor:pointer;" >X</span>
+   </div>
+ 
+   <div id="mfq_color_popup_inner_col" > 
+ 
+    <div id="mfq_color_popup_filters_wrapper_mob" class="mfq_color_popup_filters_mob" >
+      <div style="position:relative" >
+       <span style="position: absolute;right: 0px;background: #ba0066;height: -webkit-fill-available;display: flex;align-items: center;padding: 0px 5px;border-radius: 0px 5px 5px 0px;color: white;font-weight: 500;font-size: 12px;cursor:pointer" class="mfq_popup_search_cls" >Verwijder</span>
+       <span class="suggestions_loader infinite-loop" style="display:none;z-index: 9;position: absolute;right: 70px;top: 10px;width: 15px;" >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#e708ac" d="M208 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm0 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM48 208a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm368 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM75 369.1A48 48 0 1 1 142.9 437 48 48 0 1 1 75 369.1zM75 75A48 48 0 1 1 142.9 142.9 48 48 0 1 1 75 75zM437 369.1A48 48 0 1 1 369.1 437 48 48 0 1 1 437 369.1z"/></svg>
+       </span> 
+       <input class="mfq_popup_search" type="text" placeholder="Vul een kleur in.." style="width:100%;padding: 8px;border: 1px solid #aeaeae;border-radius: 3px;font-size: 14px;outline:none" />
+       <div class="suggestion_list" style="display: none;flex-direction: column;background: white;width: 100%;top: 35px;position: absolute;z-index: 999;border: 1px solid #d3d3d3;border-radius: 5px;padding: 5px 10px;font-weight: 500;color: black;font-size: 14px;" >
+       </div>
+      </div>
+      <select class="select_range" style="padding: 8px;border: 1px solid #aeaeae;border-radius: 3px;" >
+      </select>
+      <div style="border: 1px solid #aeaeae;display: flex;align-items: center;justify-content: space-around;border-radius: 3px;gap: 10px;padding: 10px 10px;" >
+       <span d-id="f_one1" color="wit"  class="filter_color_trg" style="background:white;width:100%;height:30px" ><span class="filter_color_trg_icon filter_color f_one1" style="height: 28px;" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_two2" color="rood"   class="filter_color_trg" style="background:red;width:100%;height:30px" ><span class="filter_color_trg_icon filter_color f_two2" style="height: 28px;" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_three3" color="oranje" class="filter_color_trg" style="background:orange;width:100%;height:30px" ><span class="filter_color_trg_icon filter_color f_three3" style="height: 28px;" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_four4" color="geel" class="filter_color_trg" style="background:yellow;width:100%;height:30px" ><span class="filter_color_trg_icon filter_color f_four4" style="height: 28px;" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_five5" color="groen" class="filter_color_trg" style="background:green;width:100%;height:30px" ><span class="filter_color_trg_icon filter_color f_five5" style="height: 28px;" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_six6" color="blauw"  class="filter_color_trg" style="background:blue;width:100%;height:30px" ><span class="filter_color_trg_icon filter_color f_six6" style="height: 28px;" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_seven7" color="paars"  class="filter_color_trg" style="background:purple;width:100%;height:30px" ><span class="filter_color_trg_icon filter_color f_seven7" style="height: 28px;" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_eight8" color="beige"  class="filter_color_trg" style="background:#D2B48C;width:100%;height:30px" ><span class="filter_color_trg_icon filter_color f_eight8" style="height: 28px;" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span> 
+      </div>
+    </div> 
+     
+    <div id="mfq_color_popup_filters_wrapper" class="mfq_color_popup_filters_desktop" >
+     
+     <div class="mfq_color_popup_filter_cards" >
+      <div style="display:flex;flex-direction:column;" >
+       <span style="color: #173150;font-weight: 800;" >Zoek op naam:</span>
+       <p style="line-height: 16px;padding: 0px;margin: 0px;font-size: 14px;color: #173150;" >Vul een naam of kleurcode in om de gewenste kleur te zoeken.&nbsp;<img class="mfq_info_popup_trg" style="width: 14px;cursor:pointer;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/info2.png?v=1746634182" /></p> 
+      </div>
+      <div style="position:relative;width:100%" >
+       <span style="display:none;position: absolute;right: 0px;background: #ba0066;height: -webkit-fill-available;display: flex;align-items: center;padding: 0px 5px;border-radius: 0px 5px 5px 0px;color: white;font-weight: 500;font-size: 12px;cursor:pointer" class="mfq_popup_search_cls" >Verwijder</span> 
+       <span class="suggestions_loader infinite-loop" style="z-index: 9;position: absolute;right: 70px;top: 10px;width: 15px;display: none;" >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#e708ac" d="M208 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm0 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM48 208a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm368 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM75 369.1A48 48 0 1 1 142.9 437 48 48 0 1 1 75 369.1zM75 75A48 48 0 1 1 142.9 142.9 48 48 0 1 1 75 75zM437 369.1A48 48 0 1 1 369.1 437 48 48 0 1 1 437 369.1z"/></svg>
+       </span>
+       <input class="mfq_popup_search" placeholder="Vul een kleur in.." style="outline:none;padding: 0px 10px;height: 35px;border-radius: 3px;border: none;border: 1px solid #d2d1d1;font-size: 14px;width:100%" type="text" /> 
+       <div class="suggestion_list" style="display: none;flex-direction: column;background: white;width: 100%;top: 35px;position: absolute;z-index: 999;border: 1px solid #d3d3d3;border-radius: 5px;padding: 5px 10px;font-weight: 500;color: black;font-size: 14px;" >
+       </div>
+      </div>
+     </div> 
+ 
+     <div class="mfq_color_popup_filter_cards" >
+      <div style="display:flex;flex-direction:column" >
+       <span style="color: #173150;font-weight: 800;" >Kies via een kleurenwaaier:</span>
+       <p style="line-height: 16px;padding: 0px;margin: 0px;font-size: 14px;color: #173150;" >We kunnen alle kleuren uit iedere waaier mengen. Je bent niet merkgebonden.&nbsp;<img class="mfq_info_popup_trg" style="width: 14px;cursor:pointer;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/info2.png?v=1746634182" /></p> 
+      </div>
+      <select class="select_range" style="height: 35px;border-radius: 3px;border: none;border: 1px solid #d2d1d1;" >
+      </select> 
+     </div> 
+ 
+     <div class="mfq_color_popup_filter_cards" >
+      <div style="display:flex;flex-direction:column" >
+       <span style="color: #173150;font-weight: 800;" >Kies een hoofdkleur:</span>
+       <p style="line-height: 16px;padding: 0px;margin: 0px;font-size: 14px;color: #173150;" >Selecteer een of meerdere hoofdkleuren op basis van je huidige filters.&nbsp;<img class="mfq_info_popup_trg" style="width: 14px;cursor:pointer;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/info2.png?v=1746634182" /></p> 
+      </div> 
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid #aeaeae;height:35px;background:white;border-radius: 3px;" >
+       <span d-id="f_one" color="wit"  class="filter_color_trg" style="background:white" ><span class="filter_color_trg_icon filter_color f_one" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_two" color="rood"   class="filter_color_trg" style="background:red" ><span class="filter_color_trg_icon filter_color f_two"  ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_three" color="oranje" class="filter_color_trg" style="background:orange" ><span class="filter_color_trg_icon filter_color f_three" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_four" color="geel" class="filter_color_trg" style="background:yellow" ><span class="filter_color_trg_icon filter_color f_four"  ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_five" color="groen" class="filter_color_trg" style="background:green" ><span class="filter_color_trg_icon filter_color f_five"  ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_six" color="blauw"  class="filter_color_trg" style="background:blue" ><span class="filter_color_trg_icon filter_color f_six" ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_seven" color="paars"  class="filter_color_trg" style="background:purple" ><span class="filter_color_trg_icon filter_color f_seven"  ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span>
+       <span d-id="f_eight" color="beige"  class="filter_color_trg" style="background:#D2B48C" ><span class="filter_color_trg_icon filter_color f_eight"  ><svg style="width: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M86.6 9.4C74.1-3.1 53.9-3.1 41.4 9.4s-12.5 32.8 0 45.3L122.7 136 30.6 228.1c-37.5 37.5-37.5 98.3 0 135.8L148.1 481.4c37.5 37.5 98.3 37.5 135.8 0L474.3 290.9c28.1-28.1 28.1-73.7 0-101.8L322.9 37.7c-28.1-28.1-73.7-28.1-101.8 0L168 90.7 86.6 9.4zM168 181.3l49.4 49.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L213.3 136l53.1-53.1c3.1-3.1 8.2-3.1 11.3 0L429.1 234.3c3.1 3.1 3.1 8.2 0 11.3L386.7 288 67.5 288c1.4-5.4 4.2-10.4 8.4-14.6L168 181.3z"/></svg></span></span> 
+      </div>
+     </div> 
+      
+    </div>
+    
+    <div id="mfq_color_popup_colors_list" style="position:relative;" >
+
+      <div id="mfq_color_popup_loader" style="position: absolute;display: none;justify-content: center;align-items: center;width: 100%;height: 100%;background: rgba(255, 255, 255, 0.8);z-index: 99;" >
+        <img style="width:30px" class="infinite-loop" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/spinner-solid.svg?v=1746051404" />
+      </div>
+ 
+      <div  class="mfq_color_popup_selected_clear" style="border: 1px solid #d2d1d1;min-width: 150px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border-radius:4px;height:110px" >
+       <img src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/ban-solid.svg?v=1750176240" style="width: 50px;" />
+       <span style="color:red;font-weight:700;font-size:18px;" >Geen kleur</span> 
+      </div>
+      
+      
+    </div>
+
+      <div id="mfq_color_popup_nav" style="display:flex;justify-content:center;width:100%;align-items: center;height: 31px;" >
+       <div id="page_numbers" style="display:flex;gap:4px;justify-content:center;height:fit-content" class="flex gap-2 justify-center h-fit"></div>
+      </div>          
+   
+   </div> 
+    
+  </div>
+   
+ </div>
+
+<script>
+   jQuery(document).ready(function(){
+
+  function formatPagination(links) {
+  const formatted = [];
+  const pageLinks = links.filter(l => /^\d+$/.test(l.label)).map(l => ({
+    ...l,
+    page: parseInt(l.label),
+  }));
+
+  const prev = links.find(l => l.label.includes('Previous'));
+  const next = links.find(l => l.label.includes('Next'));
+
+  const current = pageLinks.find(l => l.active);
+  if (!current) return links; // fallback if no active
+
+  const currentPage = current.page;
+  const lastPage = Math.max(...pageLinks.map(p => p.page));
+
+  // Always include "Previous"
+  if (prev) formatted.push(prev);
+
+  // Always include first page
+  const first = pageLinks.find(p => p.page === 1);
+  if (first) formatted.push(first);
+
+  if (currentPage > 4) {
+    formatted.push({ url: null, label: '...', active: false });
+  }
+
+  // Include current ±2 range (excluding first/last if already shown)
+  for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+    if (i > 1 && i < lastPage) {
+      const found = pageLinks.find(p => p.page === i);
+      if (found) formatted.push(found);
+    }
+  }
+
+  if (currentPage < lastPage - 3) {
+    formatted.push({ url: null, label: '...', active: false });
+  }
+
+  // Always include last page
+  const last = pageLinks.find(p => p.page === lastPage);
+  if (last) formatted.push(last);
+
+  // Always include "Next"
+  if (next) formatted.push(next);
+
+  return formatted;
+}
+
+    //subpopup image selection
+     $('.mfq_color_sub_popup_mockup_image_option').on('click',function(){
+      $('.mfq_color_sub_popup_mockup_image_placeholder').attr('src',$(this).attr('src'))
+     })
+     //subpopup image selection
+     
+
+    const isSelectedColor = localStorage.getItem('selected_color') || false; 
+    if(isSelectedColor){
+      $('#mfq_color_popup_selected_color').css('background',isSelectedColor.hex);
+      $('#mfq_color_popup_selected_name').text(isSelectedColor.name)
+        
+      $('#mfq_color_popup_selected').css('display','flex')
+    }
+
+    $('#mfq_color_sub_popup_close').on('click',function(){
+      $('#mfq_color_sub_popup_wrapper').fadeOut(200)
+    })
+
+    function truncateText(str, maxLength) {
+     if (typeof str !== 'string') return '';
+     return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
+    }
+
+    $(document).on('click','.mfq_color_popup_card',function(){
+      $('#mfq_color_sub_popup_name').text( $(this).attr('name') )
+      $('#mfq_color_sub_popup_range').text( $(this).attr('range') )
+
+      if($(this).attr('range').toLowerCase() === 'puro'){
+        $('.puro_desclaimer').css('display','flex')
+      } else{
+        $('.puro_desclaimer').css('display','none')
+      }     
+      
+      $('.mfq_color_sub_popup_mockup_image, .mfq_color_sub_popup_mockup_images').css('background',$(this).attr('hex'))
+      
+      $('#mfq_color_sub_popup_trg').attr('d-id',$(this).attr('id')).attr('hex',$(this).attr('hex')).attr('name',$(this).attr('name') )
+      
+      $('#mfq_color_sub_popup_wrapper').fadeIn(200).css('display','flex')
+
+      if($('.mfq_popup_selected_color').val() != ''){
+       $('.product-form__submit').attr('disabled',false).css('background','#ba0066')     
+      }
+
+    })
+
+    $('#mfq_color_sub_popup_trg').on('click',function(){
+      let selectedColor = {id:$(this).attr('d-id'),hex:$(this).attr('hex'),name:$(this).attr('name')}
+      localStorage.setItem('selected_color',JSON.stringify(selectedColor))
+
+      let url = window.location.pathname.split('/')[1]
+      console.log(url);
+      if(url === 'products'){
+       console.log(selectedColor.name)
+       $('.mfq_color_popup_name').text(truncateText(selectedColor.name, 20))
+       $('.color_popup_trg').css('display','none')
+       $('.color_popup_edit_trg').css('background',selectedColor.hex).css('display','flex')
+       $('#mfq_color_popup_selected_color').css('background',selectedColor.hex)
+
+      $('#mfq_color_popup_selected_name').text(selectedColor.name)
+      $('#mfq_popup_selected_product_color').text(selectedColor.name)
+      $('#mfq_color_popup_selected').css('display','flex')
+       $('.mfq_popup_selected_color').val(selectedColor.name) 
+       $('#mfq_color_sub_popup_wrapper').fadeOut(200) 
+       $('#mfq_color_popup_wrapper').fadeOut(220) 
+
+       if($('.mfq_popup_selected_color').val() != ''){
+        $('.product-form__submit').attr('disabled',false).css('background','#ba0066')     
+       }
+        
+      }else{
+       window.location.href = '/pages/kleurkeuzehulp?color='+encodeURIComponent( $('#mfq_color_sub_popup_trg').attr('hex') ) 
+      }
+      
+    })
+
+    $('.mfq_color_popup_selected_clear').on('click',function(e){
+      e.stopPropagation();
+      window.history.replaceState({}, '', window.location.pathname);
+      localStorage.removeItem('selected_color')
+      $('.color_popup_edit_trg').css('display','none')
+      $('.color_popup_trg').css('display','flex')
+      $('#mfq_popup_selected_product_color').text('')
+      $('#mfq_color_popup_selected').css('display','none')
+      $('.mfq_popup_selected_color').val("")
+      $('.mfq_popular_color_popup_card').css('border','1px solid #c2c2c2') 
+
+      if($('.mfq_popup_selected_color').val() === ''){
+       $('.product-form__submit').attr('disabled',true).css('background','gray')     
+      }
+
+    }) 
+
+    $('.mfq_info_popup_trg').on('click',function(){
+      $('#mfq_color_info_popup_wrapper').fadeIn(200).css('display','flex')
+    }) 
+
+     $('#mfq_info_popup_close').on('click',function(){
+      $('#mfq_color_info_popup_wrapper').fadeOut(200)
+    }) 
+
+
+    // apis fetching    
+    let PAGE = 1;
+    let LAST_PAGE = 1;
+    let PER_PAGE = 100;
+    {% comment %} let SELECTED_RANGE = '171'; {% endcomment %}
+    let SELECTED_RANGE = '';
+    let SELECTED_COLORS = [];
+
+    function truncateText(str, maxLength) {
+     if (typeof str !== 'string') return '';
+     return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
+    }
+
+   // Delegate event to dynamically added buttons
+   $(document).on('click', '.page-btn', function () {
+     const selectedPage = parseInt($(this).attr('page'));
+     if (!isNaN(selectedPage) && selectedPage !== PAGE) {
+       PAGE = selectedPage;
+       GetColorsData('',false);
+     }
+   });
+
+   // Rank Searched keyword
+   function normalize(str) {
+  return (str || '')
+    .toUpperCase()
+    .replace(/\s+/g, '');
+}
+
+function rankColors(colors, search) {
+  if (!search) return colors;
+
+  const normalizedSearch = normalize(search);
+  const words = search.toUpperCase().split(/\s+/).filter(Boolean);
+
+  return colors
+    .map(color => {
+      const name = color.name || '';
+      const normalizedName = normalize(name);
+
+      let score = 100;
+
+      // 1️⃣ Exact normalized match → TOP
+      if (normalizedName === normalizedSearch) {
+        score = 0;
+      }
+      // 2️⃣ Starts with
+      else if (normalizedName.startsWith(normalizedSearch)) {
+        score = 1;
+      }
+      // 3️⃣ All words exist
+      else if (words.every(w => name.toUpperCase().includes(w))) {
+        score = 2;
+      }
+      // 4️⃣ Partial match
+      else if (words.some(w => name.toUpperCase().includes(w))) {
+        score = 3;
+      }
+
+      return { ...color, _rank: score };
+    })
+    .sort((a, b) => a._rank - b._rank)
+    .map(({ _rank, ...color }) => color); // cleanup
+}
+   // Rank Searched keyword
+
+   function GetColorsData(search = '',isNavReset){
+    if(isNavReset){
+     PAGE = 1;
+     LAST_PAGE = 1;
+    } 
+     
+     $('#mfq_color_popup_loader').fadeIn(100).css('display','flex')
+    const url = 'https://olive-hamster-249045.hostingersite.com/api/admin/get/colors?page='+PAGE+'&per_page='+PER_PAGE;
+     
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {range:SELECTED_RANGE,main_colors:SELECTED_COLORS,search:search,isFront:1},
+        success: function(response) {
+          console.log(response)
+          
+          if(response.status && response.colors.data.length){  
+
+           //navigation
+            // Update LAST_PAGE from response
+            LAST_PAGE = response.colors.last_page;
+            
+            // Render numbered pagination buttons
+            $('#page_numbers').empty();
+
+            let links = formatPagination(response.colors.links)
+            
+            links.forEach(link => {
+              // Skip Previous and Next if you have separate handlers for them
+              if (link.label.includes('Previous') || link.label.includes('Next')) return;
+            
+              // Handle ellipsis
+              if (link.label === '...') {
+                $('#page_numbers').append(`
+                  <button style="padding:5px 9px;color:#e42784;background:white;border:2px solid #e42784;border-radius:50px" disabled>...</button>
+                `);
+                return;
+              }
+            
+              const pageNumber = parseInt(link.label);
+              
+              const isActive = link.active 
+                ? 'background:#e42784;border:2px solid #e42784;color:white' 
+                : 'background:white;border:2px solid #e42784;color:#e42784';
+            
+            if ($(`#page_numbers button[page="${pageNumber}"]`).length === 0) {
+
+              $('#page_numbers').append(`
+                <button 
+                  class="page-btn" style="cursor:pointer;padding:5px 9px;border-radius: 20px;${isActive}" 
+                  page="${pageNumber}"
+                >
+                  ${pageNumber}
+                </button>
+              `);
+              } 
+            });            
+           //navigation
+  
+            const loader = $('#mfq_color_popup_colors_list #mfq_color_popup_loader').detach();
+            const clearBtn = $('#mfq_color_popup_colors_list .mfq_color_popup_selected_clear').detach();
+            const navigation = $('#mfq_color_popup_colors_list #mfq_color_popup_nav').detach();
+            $('#mfq_color_popup_colors_list').empty().append(loader).append(clearBtn);
+            let allColors = response.colors.data;
+            if(search != ''){
+             allColors = rankColors(response.colors.data, search);
+            }
+           allColors.forEach((c)=>{
+            $('#mfq_color_popup_colors_list').append(`
+           <div d-id="${c.id}" name="${c.name}" range="${c.color_category.range}" hex="${c.hex}"  style="background: ${c.hex};" class="mfq_color_popup_card" >
+            <div class="mfq_color_container" style="display: flex;width: 100%;height: 55%;border-radius: 6px 6px 0px 0px;" ></div>
+             <div class="mfq_color_text" style="display: flex;background: white;flex-direction: column;height: 45%;font-size: 12px;line-height: 16px;padding: 0px 10px;justify-content: center;border-radius: 0px 0px 5px 5px;" >
+              <span title="${c.name}" style="font-weight: 700;color: black;" >${truncateText(c.name, 12)}</span> 
+              <span title="${c.color_category.range}" style="color: #a1a1a1;" >${truncateText(c.color_category.range, 12)}</span> 
+             </div>
+            </div>
+            `)
+           })
+
+           $('#mfq_color_popup_colors_list').append(navigation); 
+           
+           //add ranges in search options
+           // Clear and repopulate only if needed
+           let ranges = response.ranges;
+           $('.select_range').empty();
+
+           // Add 'All ranges' option
+           $('.select_range').append('<option value="">Alle kleuren</option>');
+
+            // Populate new ranges
+            for (const [brand, collections] of Object.entries(ranges)) {
+            // Filter visible collections
+             const visibleCollections = collections.filter(c => c.isVisible === 1);
+
+            // Only proceed if there is at least one visible collection
+            if (visibleCollections.length > 0) {
+             let group = document.createElement('optgroup');
+             group.label = brand;
+
+            for (const collection of visibleCollections) {
+             let option = document.createElement('option');
+             option.value = collection.value;
+             option.textContent = collection.label;
+             group.appendChild(option);
+            }
+
+           $('.select_range').append(group);
+         }
+       }
+
+            // Restore previous selection if it exists in the new options
+            if (SELECTED_RANGE != '') {
+              $('.select_range').val(SELECTED_RANGE);
+            } else {
+              $('.select_range').val('');
+            }
+  
+           
+          }else{
+            const loader = $('#mfq_color_popup_colors_list #mfq_color_popup_loader').detach();
+            $('#mfq_color_popup_colors_list').empty().append(loader);
+                     $('#mfq_color_popup_colors_list').append(`<div style="display: flex;flex-direction:column;width: 100%;height: 100%;font-size: 20px;" >
+             <p style="height: fit-content;font-size: 14px;color: #173150;font-weight: 400;" >We hebben jouw kleur niet kunnen vinden, naar welke kleur ben je op zoek? Neem contact met ons op:</p>
+             <div class="no-contact-grid">
+               <div class="no-card">
+                 <span class="no-title" style="color:#e42784" >Bel ons</span>
+                 <span class="no-desc">Snelste optie, direct antwoord (binnen <a href="https://www.verfsale.com/pages/contact" style="color:#e42784" >openingstijden</a>).</span>
+                 <a target="_blank" href="tel:+31634212137" class="no-btn" >
+                  <svg fill="white" style="width: 19px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224.2 89C216.3 70.1 195.7 60.1 176.1 65.4L170.6 66.9C106 84.5 50.8 147.1 66.9 223.3C104 398.3 241.7 536 416.7 573.1C493 589.3 555.5 534 573.1 469.4L574.6 463.9C580 444.2 569.9 423.6 551.1 415.8L453.8 375.3C437.3 368.4 418.2 373.2 406.8 387.1L368.2 434.3C297.9 399.4 241.3 341 208.8 269.3L253 233.3C266.9 222 271.6 202.9 264.8 186.3L224.2 89z"/></svg>
+                  BEL ONS
+                 </a>
+               </div>
+               <div class="no-card">
+                 <span class="no-title" style="color:#e42784" >Mail ons</span>
+                 <span class="no-desc">Meestal binnen 30 minuten antwoord (binnen <a href="https://www.verfsale.com/pages/contact" style="color:#e42784" >openingstijden</a>).</span>
+                 <a target="_blank" href="mailto:info@verfsale.com?subject={{shop.metafields.custom.colors_menu_email_title}}" class="no-btn" >
+                  <svg style="width: 19px;" fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M112 128C85.5 128 64 149.5 64 176C64 191.1 71.1 205.3 83.2 214.4L291.2 370.4C308.3 383.2 331.7 383.2 348.8 370.4L556.8 214.4C568.9 205.3 576 191.1 576 176C576 149.5 554.5 128 528 128L112 128zM64 260L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 260L377.6 408.8C343.5 434.4 296.5 434.4 262.4 408.8L64 260z"/></svg>
+                  MAIL ONS
+                 </a>
+               </div>
+             </div>
+            </div>
+            `)  
+          }
+          $('#mfq_color_popup_loader').fadeOut(100)
+          $('#page_numbers').empty();
+        },
+        error: function(xhr, status, error) {
+         console.log('Request failed:', error);
+         const loader = $('#mfq_color_popup_colors_list #mfq_color_popup_loader').detach();
+         $('#mfq_color_popup_colors_list').empty().append(loader);
+         $('#mfq_color_popup_colors_list').append(`<div style="display: flex;flex-direction:column;width: 100%;height: 100%;font-size: 20px;" >
+             <p style="height: fit-content;font-size: 14px;color: #173150;font-weight: 400;" >We hebben jouw kleur niet kunnen vinden, naar welke kleur ben je op zoek? Neem contact met ons op:</p>
+             <div class="no-contact-grid">
+               <div class="no-card">
+                 <span class="no-title" style="color:#e42784" >Bel ons</span>
+                 <span class="no-desc">Snelste optie, direct antwoord (binnen <a href="https://www.verfsale.com/pages/contact" style="color:#e42784" >openingstijden</a>).</span>
+                 <a target="_blank" href="tel:+31634212137" class="no-btn" >
+                  <svg fill="white" style="width: 19px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224.2 89C216.3 70.1 195.7 60.1 176.1 65.4L170.6 66.9C106 84.5 50.8 147.1 66.9 223.3C104 398.3 241.7 536 416.7 573.1C493 589.3 555.5 534 573.1 469.4L574.6 463.9C580 444.2 569.9 423.6 551.1 415.8L453.8 375.3C437.3 368.4 418.2 373.2 406.8 387.1L368.2 434.3C297.9 399.4 241.3 341 208.8 269.3L253 233.3C266.9 222 271.6 202.9 264.8 186.3L224.2 89z"/></svg>
+                  BEL ONS
+                 </a>
+               </div>
+               <div class="no-card">
+                 <span class="no-title" style="color:#e42784" >Mail ons</span>
+                 <span class="no-desc">Meestal binnen 30 minuten antwoord (binnen <a href="https://www.verfsale.com/pages/contact" style="color:#e42784" >openingstijden</a>).</span>
+                 <a target="_blank" href="mailto:info@verfsale.com?subject={{shop.metafields.custom.colors_menu_email_title}}" class="no-btn" >
+                  <svg style="width: 19px;" fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M112 128C85.5 128 64 149.5 64 176C64 191.1 71.1 205.3 83.2 214.4L291.2 370.4C308.3 383.2 331.7 383.2 348.8 370.4L556.8 214.4C568.9 205.3 576 191.1 576 176C576 149.5 554.5 128 528 128L112 128zM64 260L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 260L377.6 408.8C343.5 434.4 296.5 434.4 262.4 408.8L64 260z"/></svg>
+                  MAIL ONS
+                 </a>
+               </div>
+             </div>
+            </div>
+            `)  
+         $('#mfq_color_popup_loader').fadeOut(100)
+         $('#page_numbers').empty();
+        }
+       });
+      }
+
+     GetColorsData('',false)
+
+   $('.select_range').on('change',function(){
+    SELECTED_RANGE = $(this).val()
+    GetColorsData('',true)
+   })
+
+   $('.filter_color_trg').on('click',function(){
+    if($(this).hasClass('selected')){
+      $(`.${$(this).attr('d-id')}`).css('display','none')
+      SELECTED_COLORS = SELECTED_COLORS.filter((e)=> e != $(this).attr('color') )
+      $(this).removeClass('selected') 
+      GetColorsData('',true) 
+    }else{
+      $(`.${$(this).attr('d-id')}`).css('display','flex')
+      SELECTED_COLORS.push($(this).attr('color'))
+      $(this).addClass('selected') 
+      GetColorsData('',true) 
+    }
+  })
+let suggestions = [];
+async function GetSuggestions(q) {
+    if (!q || q.length < 3) return;
+    $('.suggestion_list').fadeOut(200)
+    $('.suggestions_loader').fadeIn(200).css('display','flex')
+    try {
+        const res = await fetch(`https://olive-hamster-249045.hostingersite.com/api/test?q=${encodeURIComponent(q)}`);
+        const data = await res.json();
+
+        if(data.length > 0){
+         suggestions = data;
+         $('.suggestion_list').empty()
+         data.forEach((d)=>{
+           $('.suggestion_list').append(`<span name="${d.name}" class="suggestion_item" style="border-radius: 5px;padding: 5px 12px;cursor:pointer" >${d.name}</span>`)
+         })
+
+         $('.suggestion_list').fadeIn(200).css('display','flex')
+         
+        }
+        $('.suggestions_loader').fadeOut(200)
+        console.log(data);
+    } catch (error) {
+        console.error("Fetch error:", error);
+        $('.suggestions_loader').fadeOut(200)
+    }
+}
+
+
+let searchTimeout;
+
+$('.mfq_popup_search').on('focus',function(){
+ if(suggestions.length > 0){
+  $('.suggestion_list').fadeIn(200).css('display','flex')
+ }
+})
+
+$('.mfq_popup_search_cls').on('click',function(){
+ $('.mfq_popup_search').val('').trigger('input')
+})
+
+$('.mfq_popup_search').on('input', function () {
+    const searchValue = $(this).val().trim();
+    
+    GetSuggestions(searchValue);
+
+    clearTimeout(searchTimeout);
+
+    searchTimeout = setTimeout(() => {
+        GetColorsData(searchValue, true);
+    }, 500);
+});
+
+$(document).on('click', function (e) {
+    if (!$(e.target).closest('.suggestion_list, .mfq_popup_search').length) {
+        $('.suggestion_list').hide();
+    }
+});
+
+$(document).on('click','.suggestion_item',function(){
+ const name = $(this).attr('name');
+ $('.mfq_popup_search').val(name);
+ $('.suggestion_list').fadeOut(200);
+ GetColorsData(name, true);
+})
+
+
+     
+     
+   })
+</script>
+
+         

@@ -1,0 +1,426 @@
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-totals.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  class="gradient color-{{ section.settings.color_scheme }}{% if cart == empty %} is-empty{% endif %}"
+  id="main-cart-footer"
+  data-id="{{ section.id }}"
+>
+  <div class="page-width">
+    <div
+      id="free-shipping-bar-2"
+      class="free-shipping-bar small-hide medium-hide"
+      data-threshold="50"
+      data-currency="{{ cart.currency.symbol | default: shop.currency }}"
+    >
+      <p id="free-shipping-message-2" class="h4"></p>
+      <div class="progress-container">
+        <div id="free-shipping-progress-2" class="progress-fill"></div>
+      </div>
+    </div>
+    <div class="cart__footer isolate section-{{ section.id }}-padding">
+      <div class="cart__blocks">
+        {% for block in section.blocks %}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+            {%- when 'subtotal' -%}
+              <div class="js-contents" {{ block.shopify_attributes }}>
+                <div>
+                  {%- if cart.cart_level_discount_applications.size > 0 -%}
+                    <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                      {%- for discount in cart.cart_level_discount_applications -%}
+                        <li class="discounts__discount discounts__discount--position">
+                          {{- 'icon-discount.svg' | inline_asset_content -}}
+                          {{ discount.title | escape }}
+                          (-{{ discount.total_allocated_amount | money }})
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </div>
+
+                <div class="totals">
+                  <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>
+                  <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p>
+                </div>
+
+                <small class="tax-note caption-large rte hidden">
+                  {%- if cart.duties_included and cart.taxes_included -%}
+                    {%- if shop.shipping_policy.body == blank -%}
+                      {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t }}
+                    {%- else -%}
+                      {{
+                        'sections.cart.duties_and_taxes_included_shipping_at_checkout_with_policy_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {%- endif -%}
+                  {%- elsif cart.duties_included == false and cart.taxes_included -%}
+                    {%- if shop.shipping_policy.body == blank -%}
+                      {{ 'sections.cart.taxes_included_shipping_at_checkout_without_policy' | t }}
+                    {%- else -%}
+                      {{
+                        'sections.cart.taxes_included_shipping_at_checkout_with_policy_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {%- endif -%}
+                  {%- elsif cart.duties_included and cart.taxes_included == false -%}
+                    {%- if shop.shipping_policy.body == blank -%}
+                      {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+                    {%- else -%}
+                      {{
+                        'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {%- endif -%}
+                  {%- elsif cart.duties_included == false and cart.taxes_included == false -%}
+                    {%- if shop.shipping_policy.body == blank -%}
+                      {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+                    {%- else -%}
+                      {{
+                        'sections.cart.taxes_at_checkout_shipping_at_checkout_with_policy_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {%- endif -%}
+                  {%- endif -%}
+                </small>
+                <div class="cart__ctas" {{ block.shopify_attributes }}>
+                  <div class="cartthredesc" style="display:none;">
+                    <!-- Discount input -->
+                    <button
+                      type="button"
+                      onclick="toggleDiscountCode()"
+                      class="discount_toggle"
+                      style="margin-top: 15px;"
+                    >
+                      kortingscode
+                      <svg class="icon icon-caret" viewBox="0 0 10 6">
+                        <path fill="currentColor" fill-rule="evenodd" d="M9.354.646a.5.5 0 0 0-.708 0L5 4.293 1.354.646a.5.5 0 0 0-.708.708l4 4a.5.5 0 0 0 .708 0l4-4a.5.5 0 0 0 0-.708" clip-rule="evenodd"></path>
+                      </svg>
+                    </button>
+
+                    <div id="discount-code-section" style="display:none; margin-top:10px;">
+                      <label for="discount_code">Enter Discount Code:</label>
+                      <input type="text" id="discount_code" name="discount_code" style="margin-top: 5px;">
+                    </div>
+
+                    <!-- Newsletter checkbox -->
+                    <div style="margin-top: 20px;text-align:right;">
+                      <label>
+                        <input type="checkbox" checked name="attributes[Subscribe to newsletter]">
+                        Subscribe to newsletter
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Custom checkout button -->
+                  <button
+                    type="button"
+                    class="cart__checkout-button button"
+                    onclick="goToCheckout()"
+                    {% if cart == empty %}
+                      disabled
+                    {% endif %}
+                  >
+                    {{ 'sections.cart.checkout' | t }}
+                    {{ cart.total_price | money_with_currency }}
+                  </button>
+
+                  <div class="cart__payment" style="width:100%;margin:1rem 0;">
+                    <span class="visually-hidden">{{ 'sections.footer.payment' | t }}</span>
+                    <ul class="list list-payment" role="list" style="width:100%;justify-content: center;">
+                      <li class="list-payment__item">
+                        <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path opacity="0.07" d="M35 0H3C1.3 0 0 1.3 0 3V21C0 22.7 1.4 24 3 24H35C36.7 24 38 22.7 38 21V3C38 1.3 36.6 0 35 0Z" fill="black"/>
+                          <path d="M35 1C36.1 1 37 1.9 37 3V21C37 22.1 36.1 23 35 23H3C1.9 23 1 22.1 1 21V3C1 1.9 1.9 1 3 1H35Z" fill="white"/>
+                          <path d="M28.3 10.1H28C27.6 11.1 27.3 11.6 27 13.1H28.9C28.6 11.6 28.6 10.9 28.3 10.1ZM31.2 16H29.5C29.4 16 29.4 16 29.3 15.9L29.1 15L29 14.8H26.6C26.5 14.8 26.4 14.8 26.4 15L26.1 15.9C26.1 16 26 16 26 16H23.9L24.1 15.5L27 8.7C27 8.2 27.3 8 27.8 8H29.3C29.4 8 29.5 8 29.5 8.2L30.9 14.7C31 15.1 31.1 15.4 31.1 15.8C31.2 15.9 31.2 15.9 31.2 16ZM17.8 15.7L18.2 13.9C18.3 13.9 18.4 14 18.4 14C19.1 14.3 19.8 14.5 20.5 14.4C20.7 14.4 21 14.3 21.2 14.2C21.7 14 21.7 13.5 21.3 13.1C21.1 12.9 20.8 12.8 20.5 12.6C20.1 12.4 19.7 12.2 19.4 11.9C18.2 10.9 18.6 9.5 19.3 8.8C19.9 8.4 20.2 8 21 8C22.2 8 23.5 8 24.1 8.2H24.2C24.1 8.8 24 9.3 23.8 9.9C23.3 9.7 22.8 9.5 22.3 9.5C22 9.5 21.7 9.5 21.4 9.6C21.2 9.6 21.1 9.7 21 9.8C20.8 10 20.8 10.3 21 10.5L21.5 10.9C21.9 11.1 22.3 11.3 22.6 11.5C23.1 11.8 23.6 12.3 23.7 12.9C23.9 13.8 23.6 14.6 22.8 15.2C22.3 15.6 22.1 15.8 21.4 15.8C20 15.8 18.9 15.9 18 15.6C17.9 15.8 17.9 15.8 17.8 15.7ZM14.3 16C14.4 15.3 14.4 15.3 14.5 15C15 12.8 15.5 10.5 15.9 8.3C16 8.1 16 8 16.2 8H18C17.8 9.2 17.6 10.1 17.3 11.2C17 12.7 16.7 14.2 16.3 15.7C16.3 15.9 16.2 15.9 16 15.9M5 8.2C5 8.1 5.2 8 5.3 8H8.7C9.2 8 9.6 8.3 9.7 8.8L10.6 13.2C10.6 13.3 10.6 13.3 10.7 13.4C10.7 13.3 10.8 13.3 10.8 13.3L12.9 8.2C12.8 8.1 12.9 8 13 8H15.1C15.1 8.1 15.1 8.1 15 8.2L11.9 15.5C11.8 15.7 11.8 15.8 11.7 15.9C11.6 16 11.4 15.9 11.2 15.9H9.7C9.6 15.9 9.5 15.9 9.5 15.7L7.9 9.5C7.7 9.3 7.4 9 7 8.9C6.4 8.6 5.3 8.4 5.1 8.4L5 8.2Z" fill="#142688"/>
+                        </svg>
+                      </li>
+                      <li class="list-payment__item">
+                        <svg
+                          class="icon icon--full-color"
+                          xmlns="http://www.w3.org/2000/svg"
+                          aria-labelledby="pi-bancontact"
+                          role="img"
+                          viewBox="0 0 38 24"
+                          width="38"
+                          height="24"
+                        >
+                          <title id="pi-bancontact">Bancontact</title><path fill="#000" opacity=".07" d="M35 0H3C1.3 0 0 1.3 0 3v18c0 1.7 1.4 3 3 3h32c1.7 0 3-1.3 3-3V3c0-1.7-1.4-3-3-3z"></path><path fill="#fff" d="M35 1c1.1 0 2 .9 2 2v18c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2h32"></path><path d="M4.703 3.077h28.594c.139 0 .276.023.405.068.128.045.244.11.343.194a.9.9 0 0 1 .229.29c.053.107.08.223.08.34V20.03a.829.829 0 0 1-.31.631 1.164 1.164 0 0 1-.747.262H4.703a1.23 1.23 0 0 1-.405-.068 1.09 1.09 0 0 1-.343-.194.9.9 0 0 1-.229-.29.773.773 0 0 1-.08-.34V3.97c0-.118.027-.234.08-.342a.899.899 0 0 1 .23-.29c.098-.082.214-.148.342-.193a1.23 1.23 0 0 1 .405-.068Z" fill="#fff"></path><path d="M6.38 18.562v-3.077h1.125c.818 0 1.344.259 1.344.795 0 .304-.167.515-.401.638.338.132.536.387.536.734 0 .62-.536.91-1.37.91H6.38Zm.724-1.798h.537c.328 0 .468-.136.468-.387 0-.268-.255-.356-.599-.356h-.406v.743Zm0 1.262h.448c.438 0 .693-.093.693-.383 0-.286-.219-.404-.63-.404h-.51v.787Zm3.284.589c-.713 0-1.073-.295-1.073-.69 0-.436.422-.69 1.047-.695.156.002.31.014.464.035v-.105c0-.269-.183-.396-.531-.396a2.128 2.128 0 0 0-.688.105l-.13-.474a3.01 3.01 0 0 1 .9-.132c.767 0 1.147.343 1.147.936v1.222c-.214.093-.615.194-1.136.194Zm.438-.497v-.47a2.06 2.06 0 0 0-.37-.036c-.24 0-.427.08-.427.286 0 .185.156.281.432.281a.947.947 0 0 0 .365-.061Zm1.204.444v-2.106a3.699 3.699 0 0 1 1.177-.193c.76 0 1.198.316 1.198.9v1.399h-.719v-1.354c0-.303-.167-.444-.484-.444a1.267 1.267 0 0 0-.459.079v1.719h-.713Zm4.886-2.167-.135.479a1.834 1.834 0 0 0-.588-.11c-.422 0-.652.25-.652.664 0 .453.24.685.688.685.2-.004.397-.043.578-.114l.115.488a2.035 2.035 0 0 1-.75.128c-.865 0-1.365-.453-1.365-1.17 0-.712.495-1.182 1.323-1.182.27-.001.538.043.787.132Zm1.553 2.22c-.802 0-1.302-.47-1.302-1.178 0-.704.5-1.174 1.302-1.174.807 0 1.297.47 1.297 1.173 0 .708-.49 1.179-1.297 1.179Zm0-.502c.37 0 .563-.259.563-.677 0-.413-.193-.672-.563-.672-.364 0-.568.26-.568.672 0 .418.204.677.568.677Zm1.713.449v-2.106a3.699 3.699 0 0 1 1.177-.193c.76 0 1.198.316 1.198.9v1.399h-.719v-1.354c0-.303-.166-.444-.484-.444a1.268 1.268 0 0 0-.459.079v1.719h-.713Zm3.996.053c-.62 0-.938-.286-.938-.866v-.95h-.354v-.484h.355v-.488l.718-.03v.518h.578v.484h-.578v.94c0 .256.125.374.36.374.093 0 .185-.008.276-.026l.036.488c-.149.028-.3.041-.453.04Zm1.814 0c-.713 0-1.073-.295-1.073-.69 0-.436.422-.69 1.047-.695.155.002.31.014.464.035v-.105c0-.269-.183-.396-.532-.396a2.128 2.128 0 0 0-.687.105l-.13-.474a3.01 3.01 0 0 1 .9-.132c.766 0 1.146.343 1.146.936v1.222c-.213.093-.614.194-1.135.194Zm.438-.497v-.47a2.06 2.06 0 0 0-.37-.036c-.24 0-.427.08-.427.286 0 .185.156.281.432.281a.946.946 0 0 0 .365-.061Zm3.157-1.723-.136.479a1.834 1.834 0 0 0-.588-.11c-.422 0-.651.25-.651.664 0 .453.24.685.687.685.2-.004.397-.043.578-.114l.115.488a2.035 2.035 0 0 1-.75.128c-.865 0-1.365-.453-1.365-1.17 0-.712.495-1.182 1.323-1.182.27-.001.538.043.787.132Zm1.58 2.22c-.62 0-.938-.286-.938-.866v-.95h-.354v-.484h.354v-.488l.72-.03v.518h.577v.484h-.578v.94c0 .256.125.374.36.374.092 0 .185-.008.276-.026l.036.488c-.149.028-.3.041-.453.04Z" fill="#1E3764"></path><path d="M11.394 13.946c3.803 0 5.705-2.14 7.606-4.28H6.38v4.28h5.014Z" fill="url(#pi-bancontact-a)"></path><path d="M26.607 5.385c-3.804 0-5.705 2.14-7.607 4.28h12.62v-4.28h-5.013Z" fill="url(#pi-bancontact-b)"></path><defs><linearGradient id="pi-bancontact-a" x1="8.933" y1="12.003" x2="17.734" y2="8.13" gradientUnits="userSpaceOnUse"><stop stop-color="#005AB9"></stop><stop offset="1" stop-color="#1E3764"></stop></linearGradient><linearGradient id="pi-bancontact-b" x1="19.764" y1="10.037" x2="29.171" y2="6.235" gradientUnits="userSpaceOnUse"><stop stop-color="#FBA900"></stop><stop offset="1" stop-color="#FFD800"></stop></linearGradient></defs>
+                        </svg>
+                      </li>
+                      <li class="list-payment__item">
+                        <svg
+                          class="icon icon--full-color"
+                          xmlns="http://www.w3.org/2000/svg"
+                          role="img"
+                          viewBox="0 0 38 24"
+                          width="38"
+                          height="24"
+                          aria-labelledby="pi-ideal"
+                        >
+                          <title id="pi-ideal">iDEAL</title><g clip-path="url(#pi-clip0_19918_2)"><path fill="#000" opacity=".07" d="M35 0H3C1.3 0 0 1.3 0 3V21C0 22.7 1.4 24 3 24H35C36.7 24 38 22.7 38 21V3C38 1.3 36.6 0 35 0Z"></path><path fill="#fff" d="M35 1C36.1 1 37 1.9 37 3V21C37 22.1 36.1 23 35 23H3C1.9 23 1 22.1 1 21V3C1 1.9 1.9 1 3 1H35Z"></path><g clip-path="url(#pi-clip1_19918_2)"><path d="M11.5286 5.35759V18.694H19.6782C25.0542 18.694 27.3855 15.8216 27.3855 12.0125C27.3855 8.21854 25.0542 5.35742 19.6782 5.35742L11.5286 5.35759Z" fill="white"></path><path d="M19.7305 5.06445C26.8437 5.06445 27.9055 9.4164 27.9055 12.0098C27.9055 16.5096 25.0025 18.9876 19.7305 18.9876H11.0118V5.06462L19.7305 5.06445ZM11.6983 5.71921V18.3329H19.7305C24.5809 18.3329 27.2195 16.1772 27.2195 12.0098C27.2195 7.72736 24.3592 5.71921 19.7305 5.71921H11.6983Z" fill="black"></path><path d="M12.7759 17.3045H15.3474V12.9372H12.7757M15.6593 10.7375C15.6593 11.5796 14.944 12.2625 14.0613 12.2625C13.179 12.2625 12.4633 11.5796 12.4633 10.7375C12.4633 10.3332 12.6316 9.94537 12.9313 9.65945C13.231 9.37352 13.6374 9.21289 14.0613 9.21289C14.4851 9.21289 14.8915 9.37352 15.1912 9.65945C15.4909 9.94537 15.6593 10.3332 15.6593 10.7375Z" fill="black"></path><path d="M20.7043 11.4505V12.1573H18.8719V9.32029H20.6452V10.0266H19.6127V10.3556H20.5892V11.0616H19.6127V11.4503L20.7043 11.4505ZM21.06 12.158L21.9569 9.31944H23.0109L23.9075 12.158H23.1362L22.9683 11.6089H21.9995L21.8308 12.158H21.06ZM22.216 10.9028H22.7518L22.5067 10.1007H22.4623L22.216 10.9028ZM24.2797 9.31944H25.0205V11.4505H26.1178C25.8168 7.58344 22.6283 6.74805 19.7312 6.74805H16.6418V9.32063H17.0989C17.9328 9.32063 18.4505 9.86014 18.4505 10.7275C18.4505 11.6228 17.9449 12.157 17.0989 12.157H16.6422V17.3052H19.7308C24.4416 17.3052 26.081 15.218 26.1389 12.1572H24.2797V9.31944ZM16.6415 10.0273V11.4505H17.0992C17.4165 11.4505 17.7094 11.3631 17.7094 10.7278C17.7094 10.1067 17.3834 10.0271 17.0992 10.0271L16.6415 10.0273Z" fill="#CC0066"></path></g></g><defs><clipPath id="pi-clip0_19918_2"><rect width="38" height="24" fill="white"></rect></clipPath><clipPath id="pi-clip1_19918_2"><rect width="17" height="14" fill="white" transform="translate(11 5)"></rect></clipPath></defs>
+                        </svg>
+                      </li>
+                      <li class="list-payment__item">
+                        <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path opacity="0.07" d="M35 0H3C1.3 0 0 1.3 0 3V21C0 22.7 1.4 24 3 24H35C36.7 24 38 22.7 38 21V3C38 1.3 36.6 0 35 0Z" fill="black"/>
+                          <path d="M35 1C36.1 1 37 1.9 37 3V21C37 22.1 36.1 23 35 23H3C1.9 23 1 22.1 1 21V3C1 1.9 1.9 1 3 1H35Z" fill="white"/>
+                          <path d="M15 19C18.866 19 22 15.866 22 12C22 8.13401 18.866 5 15 5C11.134 5 8 8.13401 8 12C8 15.866 11.134 19 15 19Z" fill="#EB001B"/>
+                          <path d="M23 19C26.866 19 30 15.866 30 12C30 8.13401 26.866 5 23 5C19.134 5 16 8.13401 16 12C16 15.866 19.134 19 23 19Z" fill="#F48120"/>
+                          <path d="M22 11.9998C22 9.5998 20.8 7.4998 19 6.2998C17.2 7.5998 16 9.6998 16 11.9998C16 14.2998 17.2 16.4998 19 17.6998C20.8 16.4998 22 14.3998 22 11.9998Z" fill="#D05B2E"/>
+                        </svg>
+                      </li>
+                      <li class="list-payment__item">
+                        <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path opacity="0.07" d="M35 0H3C1.3 0 0 1.3 0 3V21C0 22.7 1.4 24 3 24H35C36.7 24 38 22.7 38 21V3C38 1.3 36.6 0 35 0Z" fill="black"/>
+                          <path d="M35 1C36.1 1 37 1.9 37 3V21C37 22.1 36.1 23 35 23H3C1.9 23 1 22.1 1 21V3C1 1.9 1.9 1 3 1H35Z" fill="#006FCF"/>
+                          <path d="M22.0122 19.9361V11.5151L37.0002 11.5281V13.8541L35.2682 15.7061L37.0002 17.5731V19.9481H34.2342L32.7642 18.3261L31.3042 19.9541L22.0122 19.9341V19.9361Z" fill="white"/>
+                          <path d="M23.0132 19.0119V12.4419H28.5852V13.9549H24.8172V14.9829H28.4952V16.4709H24.8172V17.4809H28.5852V19.0119H23.0132Z" fill="#006FCF"/>
+                          <path d="M28.5571 19.0119L31.6401 15.7229L28.5571 12.4409H30.9431L32.8271 14.5239L34.7171 12.4419H37.0001V12.4929L33.9831 15.7229L37.0001 18.9199V19.0129H34.6931L32.7761 16.9099L30.8781 19.0139H28.5571V19.0119Z" fill="#006FCF"/>
+                          <path d="M22.71 4.04004H26.324L27.593 6.92104V4.04004H32.053L32.823 6.19904L33.594 4.04004H37V12.461H19L22.71 4.04004Z" fill="white"/>
+                          <path d="M23.395 4.95508L20.479 11.5211H22.479L23.029 10.2061H26.009L26.559 11.5211H28.609L25.705 4.95508H23.395ZM23.645 8.73208L24.52 6.64208L25.393 8.73208H23.645Z" fill="#006FCF"/>
+                          <path d="M28.5811 11.5201V4.95312L31.3921 4.96312L32.8401 9.00012L34.2961 4.95412H37.0001V11.5191L35.2601 11.5351V7.02513L33.6161 11.5191H32.0261L30.3501 7.01013V11.5201H28.5821H28.5811Z" fill="#006FCF"/>
+                        </svg>
+                      </li>
+                      <li class="list-payment__item">
+                        <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path opacity="0.07" d="M35 0H3C1.3 0 0 1.3 0 3V21C0 22.7 1.4 24 3 24H35C36.7 24 38 22.7 38 21V3C38 1.3 36.6 0 35 0Z" fill="black"/>
+                          <path d="M35 1C36.1 1 37 1.9 37 3V21C37 22.1 36.1 23 35 23H3C1.9 23 1 22.1 1 21V3C1 1.9 1.9 1 3 1H35Z" fill="white"/>
+                          <path d="M23.9 8.3C24.1 7.3 23.9 6.6 23.3 6C22.7 5.3 21.6 5 20.2 5H16.1C15.8 5 15.6 5.2 15.5 5.5L14 15.6C14 15.8 14.1 16 14.3 16H17L17.4 12.6L19.2 10.4L23.9 8.3Z" fill="#003087"/>
+                          <path d="M23.9001 8.2998L23.7001 8.4998C23.2001 11.2998 21.5001 12.2998 19.1001 12.2998H18.0001C17.7001 12.2998 17.5001 12.4998 17.4001 12.7998L16.8001 16.6998L16.6001 17.6998C16.6001 17.8998 16.7001 18.0998 16.9001 18.0998H19.0001C19.3001 18.0998 19.5001 17.8998 19.5001 17.6998V17.5998L19.9001 15.1998V15.0998C19.9001 14.8998 20.2001 14.6998 20.4001 14.6998H20.7001C22.8001 14.6998 24.4001 13.8998 24.8001 11.4998C25.0001 10.4998 24.9001 9.6998 24.4001 9.0998C24.3001 8.5998 24.1001 8.3998 23.9001 8.2998Z" fill="#3086C8"/>
+                          <path d="M23.2999 8.0998C23.1999 7.9998 23.0999 7.9998 22.9999 7.9998C22.8999 7.9998 22.7999 7.9998 22.6999 7.8998C22.3999 7.7998 21.9999 7.7998 21.5999 7.7998H18.5999C18.4999 7.7998 18.3999 7.7998 18.3999 7.8998C18.1999 7.9998 18.0999 8.0998 18.0999 8.2998L17.3999 12.6998V12.7998C17.3999 12.4998 17.6999 12.2998 17.9999 12.2998H19.2999C21.7999 12.2998 23.3999 11.2998 23.8999 8.4998V8.2998C23.7999 8.1998 23.5999 8.0998 23.3999 8.0998H23.2999Z" fill="#012169"/>
+                        </svg>
+                      </li>
+                      <li class="list-payment__item">
+                        <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path opacity="0.07" d="M35 0H3C1.3 0 0 1.3 0 3V21C0 22.7 1.4 24 3 24H35C36.7 24 38 22.7 38 21V3C38 1.3 36.6 0 35 0Z" fill="black"/>
+                          <path d="M35 1C36.1 1 37 1.9 37 3V21C37 22.1 36.1 23 35 23H3C1.9 23 1 22.1 1 21V3C1 1.9 1.9 1 3 1H35Z" fill="white"/>
+                          <path d="M12 12V15.7C12 16 11.8 16 11.5 15.9C9.59998 15.1 8.49998 12.6 9.19998 10.5C9.59998 9.4 10.4 8.5 11.5 8.1C11.9 7.9 12 8 12 8.3V12ZM14 12V8.3C14 8 14 8 14.3 8.1C16.4 8.9 17.5 11.4 16.7 13.5C16.3 14.6 15.5 15.5 14.4 15.9C14 16.1 14 16 14 15.7V12ZM21.2 5H13C16.8 5 19.8 8.1 19.8 12C19.8 15.9 16.8 19 13 19H21.2C25 19 28 15.9 28 12C28 8.1 25 5 21.2 5Z" fill="#3086C8"/>
+                        </svg>
+                      </li>
+                      <li class="list-payment__item">
+                        <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path opacity="0.07" d="M35 0H3C1.3 0 0 1.3 0 3V21C0 22.7 1.4 24 3 24H35C36.7 24 38 22.7 38 21V3C38 1.3 36.6 0 35 0Z" fill="black"/>
+                          <path d="M35 1C36.1 1 37 1.9 37 3V21C37 22.1 36.1 23 35 23H3C1.9 23 1 22.1 1 21V3C1 1.9 1.9 1 3 1H35Z" fill="white"/>
+                          <path d="M3.57 7.16004H2V12.66H3.57C4.4 12.66 5 12.46 5.53 12.03C6.16 11.51 6.53 10.73 6.53 9.92004C6.52 8.29004 5.31 7.16004 3.57 7.16004ZM4.83 11.3C4.49 11.6 4.06 11.74 3.36 11.74H3.07V8.10004H3.36C4.05 8.10004 4.47 8.22004 4.83 8.54004C5.2 8.87004 5.42 9.38004 5.42 9.91004C5.42 10.44 5.2 10.97 4.83 11.3ZM7.02 7.16004H8.09V12.66H7.02V7.16004ZM10.71 9.27004C10.07 9.03004 9.88 8.87004 9.88 8.58004C9.88 8.23004 10.22 7.97004 10.68 7.97004C11 7.97004 11.27 8.10004 11.54 8.42004L12.1 7.69004C11.64 7.29004 11.09 7.08004 10.48 7.08004C9.51 7.08004 8.76 7.76004 8.76 8.66004C8.76 9.42004 9.11 9.81004 10.11 10.17C10.53 10.32 10.74 10.42 10.85 10.48C11.06 10.62 11.17 10.82 11.17 11.05C11.17 11.5 10.82 11.83 10.34 11.83C9.83 11.83 9.42 11.57 9.17 11.1L8.48 11.77C8.97 12.5 9.57 12.82 10.38 12.82C11.49 12.82 12.28 12.08 12.28 11.01C12.3 10.12 11.93 9.72004 10.71 9.27004ZM12.63 9.92004C12.63 11.54 13.9 12.79 15.53 12.79C15.99 12.79 16.39 12.7 16.87 12.47V11.21C16.44 11.64 16.06 11.81 15.58 11.81C14.5 11.81 13.73 11.03 13.73 9.91004C13.73 8.85004 14.52 8.02004 15.53 8.02004C16.04 8.02004 16.43 8.20004 16.87 8.64004V7.38004C16.4 7.14004 16.01 7.04004 15.55 7.04004C13.94 7.04004 12.63 8.32004 12.63 9.92004ZM25.39 10.86L23.92 7.16004H22.75L25.08 12.8H25.66L28.03 7.16004H26.87L25.39 10.86ZM28.52 12.66H31.56V11.73H29.59V10.25H31.49V9.32004H29.59V8.10004H31.56V7.16004H28.52V12.66ZM35.81 8.79004C35.81 7.76004 35.1 7.17004 33.86 7.17004H32.27V12.67H33.34V10.46H33.48L34.96 12.67H36.28L34.55 10.35C35.36 10.18 35.81 9.63004 35.81 8.79004ZM33.65 9.70004H33.34V8.03004H33.67C34.34 8.03004 34.7 8.31004 34.7 8.85004C34.7 9.40004 34.34 9.70004 33.65 9.70004Z" fill="#231F20"/>
+                          <path d="M20.16 12.86C20.9374 12.86 21.6829 12.5512 22.2325 12.0016C22.7822 11.4519 23.091 10.7064 23.091 9.92905C23.091 9.1517 22.7822 8.40619 22.2325 7.85652C21.6829 7.30685 20.9374 6.99805 20.16 6.99805C19.3827 6.99805 18.6371 7.30685 18.0875 7.85652C17.5378 8.40619 17.229 9.1517 17.229 9.92905C17.229 10.7064 17.5378 11.4519 18.0875 12.0016C18.6371 12.5512 19.3827 12.86 20.16 12.86Z" fill="url(#paint0_linear_2291_1152)"/>
+                          <path opacity="0.65" d="M20.16 12.86C20.9374 12.86 21.6829 12.5512 22.2325 12.0016C22.7822 11.4519 23.091 10.7064 23.091 9.92905C23.091 9.1517 22.7822 8.40619 22.2325 7.85652C21.6829 7.30685 20.9374 6.99805 20.16 6.99805C19.3827 6.99805 18.6371 7.30685 18.0875 7.85652C17.5378 8.40619 17.229 9.1517 17.229 9.92905C17.229 10.7064 17.5378 11.4519 18.0875 12.0016C18.6371 12.5512 19.3827 12.86 20.16 12.86Z" fill="url(#paint1_linear_2291_1152)"/>
+                          <path d="M36.57 7.50596C36.57 7.40596 36.5 7.35596 36.39 7.35596H36.23V7.83596H36.35V7.64596L36.49 7.83596H36.63L36.47 7.63596C36.53 7.62596 36.57 7.57596 36.57 7.50596ZM36.37 7.57596H36.35V7.44596H36.37C36.43 7.44596 36.46 7.46596 36.46 7.50596C36.46 7.55596 36.43 7.57596 36.37 7.57596Z" fill="#231F20"/>
+                          <path d="M36.4102 7.17578C36.1802 7.17578 35.9902 7.36578 35.9902 7.59578C35.9902 7.82578 36.1802 8.01578 36.4102 8.01578C36.6402 8.01578 36.8302 7.82578 36.8302 7.59578C36.8302 7.36578 36.6402 7.17578 36.4102 7.17578ZM36.4102 7.94578C36.2302 7.94578 36.0702 7.79578 36.0702 7.59578C36.0702 7.40578 36.2202 7.24578 36.4102 7.24578C36.5902 7.24578 36.7402 7.40578 36.7402 7.59578C36.7402 7.78578 36.5902 7.94578 36.4102 7.94578Z" fill="#231F20"/>
+                          <path d="M37.0001 12.9839C37.0001 12.9839 27.0901 19.8729 8.97607 22.9999H34.9991C35.5267 22.9999 36.033 22.7914 36.4077 22.4198C36.7823 22.0481 36.9949 21.5435 36.9991 21.0159L37.0231 17.9959L37.0001 12.9839Z" fill="#F48120"/>
+                          <defs>
+                          <linearGradient id="paint0_linear_2291_1152" x1="21.657" y1="12.275" x2="19.632" y2="9.10405" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#F68D20"/>
+                          <stop offset="0.25" stop-color="#F68D20"/>
+                          <stop offset="0.533" stop-color="#F68D20"/>
+                          <stop offset="0.62" stop-color="#F48120"/>
+                          <stop offset="0.723" stop-color="#F48120"/>
+                          <stop offset="1" stop-color="#F48120"/>
+                          </linearGradient>
+                          <linearGradient id="paint1_linear_2291_1152" x1="21.338" y1="12.232" x2="18.378" y2="6.44605" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#F48120"/>
+                          <stop offset="0.359" stop-color="#E16F27"/>
+                          <stop offset="0.703" stop-color="#D05B2E"/>
+                          <stop offset="0.982" stop-color="#D05B2E"/>
+                          </linearGradient>
+                          </defs>
+                        </svg>
+                      </li>
+                    </ul>
+                  </div>
+                  <style>
+                    .cart__ctas {flex-wrap: wrap; justify-content: end;}
+                    .cartthredesc p strong {color: #b90066;}
+                  </style>
+
+                  <script>
+                    function toggleDiscountCode() {
+                      const section = document.getElementById('discount-code-section');
+                      section.style.display = section.style.display === 'none' ? 'block' : 'none';
+                    }
+
+                    function goToCheckout() {
+                      const discount = document.getElementById('discount_code').value.trim();
+                      // Redirect to /checkout or /cart?discount=CODE
+                      const checkoutURL = discount ? `/checkout?discount=${encodeURIComponent(discount)}` : `/checkout`;
+
+                      window.location.href = checkoutURL;
+                    }
+                  </script>
+                </div>
+              </div>
+
+            {%- else -%}
+              {%- if additional_checkout_buttons -%}
+                <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
+                  {{ content_for_additional_checkout_buttons }}
+                </div>
+              {%- endif -%}
+          {%- endcase -%}
+        {% endfor %}
+
+        <div id="cart-errors"></div>
+      </div>
+      {%- if settings.show_cart_note -%}
+        <cart-note class="cart__note field">
+          <label for="Cart-note">{{ 'sections.cart.note' | t }}</label>
+          <textarea
+            class="text-area field__input"
+            name="note"
+            form="cart"
+            id="Cart-note"
+            placeholder="{{ 'sections.cart.note' | t }}"
+          >{{ cart.note }}</textarea>
+        </cart-note>
+      {%- endif -%}
+      <div>
+        <p>
+          Bij meerdere producten met verschillende levertijden kan het zijn dat je bestelling in één keer wordt
+          verstuurd.De leverdatum zal dan gebaseerd worden op het product met de langste levertijd.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-cart-footer.name",
+  "class": "cart__footer-wrapper",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subtotal",
+      "name": "t:sections.main-cart-footer.blocks.subtotal.name",
+      "limit": 1
+    },
+    {
+      "type": "buttons",
+      "name": "t:sections.main-cart-footer.blocks.buttons.name",
+      "limit": 1
+    },
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}
+<script>
+  (function () {
+    // ---- helpers
+    function els() {
+      return {
+        bar: document.getElementById('free-shipping-bar-2'),
+        msg: document.getElementById('free-shipping-message-2'),
+        progress: document.getElementById('free-shipping-progress-2'),
+      };
+    }
+
+    function getThreshold() {
+      const { bar } = els();
+      return bar ? Number(bar.dataset.threshold) : 0;
+    }
+
+    function currencySymbol() {
+      const { bar } = els();
+      return bar && bar.dataset.currency ? bar.dataset.currency : '€';
+    }
+
+    function refreshBar() {
+      const { bar } = els();
+      if (!bar) return; // bar might be inside a section that hasn't been rendered yet
+
+      fetch('/cart.js')
+        .then((r) => r.json())
+        .then((cart) => {
+          const { msg, progress } = els(); // re-select after possible re-render
+          if (!msg || !progress) return;
+
+          const threshold = getThreshold();
+          const total = cart.total_price / 100;
+          const percent = Math.min((total / threshold) * 100, 100);
+          progress.style.width = percent + '%';
+
+          if (total >= threshold) {
+            msg.textContent = '🎉 U heeft GRATIS verzending ontgrendeld!';
+          } else {
+            const remaining = Math.max(0, threshold - total).toFixed(2);
+            msg.textContent = `Spendeer ${currencySymbol()}${remaining} voor gratis verzending!`;
+          }
+        })
+        .catch(() => {
+          /* no-op */
+        });
+    }
+
+    // ---- initial draw
+    document.addEventListener('DOMContentLoaded', refreshBar);
+
+    // ---- robust triggers after ANY cart change on the cart page
+    // Dawn sometimes dispatches these (varies by version)
+    document.addEventListener('cart:updated', refreshBar);
+    document.addEventListener('cart:refresh', refreshBar);
+
+    // Fallback: after cart form submits (qty +/- or remove use AJAX then re-render)
+    document.addEventListener('submit', function (e) {
+      if (e.target && e.target.closest('form[action^="/cart"]')) {
+        setTimeout(refreshBar, 600);
+      }
+    });
+
+    // Last-resort: watch the main content for section re-renders and re-draw
+    const container = document.getElementById('MainContent') || document.body;
+    const mo = new MutationObserver(() => {
+      setTimeout(refreshBar, 0);
+    });
+    mo.observe(container, { childList: true, subtree: true });
+  })();
+</script>

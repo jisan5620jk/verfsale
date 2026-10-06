@@ -1,0 +1,108 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<div class="custom-collection section-{{ section.id }}-padding">
+  <div class="page-width">
+     <div class="title-wrapper title-wrapper--no-top-margin">
+        <h2 class="title inline-richtext h1">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+    <div class="collection-blocks">
+      {%- for block in section.blocks -%}
+        <div class="collection-wrapper">
+          <a href="{{ block.settings.coll-link }}">
+          <div class="image-text">
+            <div class="pro-image">
+              <img src="{{ block.settings.image | img_url: 'master'}}" alt="{{ block.settings.image.alt }}" loading="lazy">
+            </div>
+          <div class="pro-text">
+              <h3> {{ block.settings.coll-name }} </h3>
+            </div>
+          </div>
+          <div class="arrow-image">
+            <img src="{{ block.settings.arrow-image | img_url: 'master'}}" alt="{{ block.settings.arrow-image.alt }}" loading="lazy">
+          </div>
+          </a>
+        </div>
+        {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Custom Collection",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "collection",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "label": "coll-name",
+            "id": "coll-name"
+          },
+          {
+            "type": "image_picker",
+            "id": "arrow-image",
+            "label": "Arrow Image"
+          },
+          {
+            "type": "url",
+            "id": "coll-link",
+            "label": "Coll Link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom Collection"
+      }
+    ]
+  }
+{% endschema %}

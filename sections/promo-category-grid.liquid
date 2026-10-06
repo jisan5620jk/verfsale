@@ -1,0 +1,211 @@
+{% schema %}
+{
+  "name": "Promo Category Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom-class",
+      "label": "Custom Class"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "main_image",
+      "name": "Main Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Main Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Main Image Link"
+        },
+        {
+          "type": "text",
+          "id": "button_1_text",
+          "label": "Button 1 Text"
+        },
+        {
+          "type": "url",
+          "id": "button_1_url",
+          "label": "Button 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "button_2_text",
+          "label": "Button 2 Text"
+        },
+        {
+          "type": "url",
+          "id": "button_2_url",
+          "label": "Button 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "button_3_text",
+          "label": "Button 3 Text"
+        },
+        {
+          "type": "url",
+          "id": "button_3_url",
+          "label": "Button 3 URL"
+        }
+      ]
+    },
+    {
+      "type": "right_top_image",
+      "name": "Right Top Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Top Right Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        }
+      ]
+    },
+    {
+      "type": "right_bottom_image",
+      "name": "Right Bottom Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Bottom Right Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_colors",
+          "label": "Show Color Choice Menu"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Category Grid",
+      "blocks": [
+        {
+          "type": "main_image"
+        },
+        {
+          "type": "right_top_image"
+        },
+        {
+          "type": "right_top_image"
+        },
+        {
+          "type": "right_bottom_image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+<div class="{{ section.settings.custom-class }} promo-grid-wrapper">
+<div class=" page-width">
+<div class="promo-grid">
+  <div class="promo-left">
+    {% for block in section.blocks %}
+      {% if block.type == 'main_image' %}
+        <a href="{{ block.settings.link }}">
+          <div class="promo-grid-image">
+          <img src="{{ block.settings.image | image_url: width: 800 }}" class="promo-main-img" alt="Promo Image">
+          </div>
+        </a>
+        <div class="promo-buttons">
+          
+          <a href="{{ block.settings.button_1_url }}" class="promo-btn">
+            {{ block.settings.button_1_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6l6 6-6 6"/>
+              </svg>
+          </a>
+          <a href="{{ block.settings.button_2_url }}" class="promo-btn">
+            {{ block.settings.button_2_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6l6 6-6 6"/>
+              </svg>
+          </a>
+          <a href="{{ block.settings.button_3_url }}" class="promo-btn">
+            {{ block.settings.button_3_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6l6 6-6 6"/>
+              </svg>
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="promo-right">
+    <div class="promo-top-row">
+      {% for block in section.blocks %}
+        {% if block.type == 'right_top_image' %}
+          
+          <div class="right-image-card" style="background-image: url('{{ block.settings.image | image_url: width: 400 }}');">
+            <a href="{{ block.settings.link }}" class="prolink-btn">
+            <a href="{{ block.settings.link }}" class="promo-btn">
+              {{ block.settings.button_text }}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6l6 6-6 6"/>
+              </svg>
+            </a>
+             </a>
+          </div>
+         
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% for block in section.blocks %}
+      {% if block.type == 'right_bottom_image' %}
+        <div class="right-bottom" style="background-image: url('{{ block.settings.image | image_url: width: 800 }}');">
+
+          {% unless block.settings.show_colors %}
+          <a href="{{ block.settings.link }}" class="prolink-btn"></a>
+          {% endunless %}
+
+          <a href="{% if block.settings.show_colors %}#{% else %}{{ block.settings.link }}{% endif %}" class="promo-btn{% if block.settings.show_colors %} color_menu_trg{% endif %}">
+            {{ block.settings.button_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6l6 6-6 6"/>
+              </svg>
+              </a>
+              {% if block.settings.show_colors %}
+              <script>
+                $('.color_menu_trg').on('click', function(e){
+                  e.preventDefault();
+                  $('#mfq_color_popup_wrapper').fadeIn(200).css('display','flex');
+                });
+              </script>
+            {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+                </div>
+                </div>

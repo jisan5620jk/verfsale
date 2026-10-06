@@ -1,0 +1,122 @@
+{% if product.metafields.custom.extra_product %}
+<div class="extraproducts">
+  <span class="extra_heading">Ook verkrijgbaar in:</span>
+  <div class=" all_extra_data">
+  {% assign product_count = 0 %}
+  {% for product in product.metafields.custom.extra_product.value %}
+    {% assign product_count = product_count | plus: 1 %}
+    {% assign color_image = product.metafields.custom.color_image.value %}
+    {% assign color_title = product.metafields.custom.color_title %}
+    <div class="image-text-container" {% if forloop.index > 3 %}style="display:none;"{% endif %}> 
+        <a href="{{ product.url }}" class="flex-item">
+          {{ color_image.src | image_url: width: color_image.width, height: color_image.height | image_tag: alt: article.title, loading: 'lazy'  }}
+          <span class="inline-text">{{ color_title }}</span>
+        </a>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% if product_count >= 3 %}
+<modal-opener
+      class="product-popup-modal__opener quick-add-hidden"
+      data-modal="#PopupModal-extra_product"
+      {{ block.shopify_attributes }}
+    >
+      <button
+        id="ProductPopup-extra_product"
+        class="product-popup-modal__button link"
+        type="button"
+        aria-haspopup="dialog"
+      >
+        Bekijk alle varianten
+      </button>
+    </modal-opener>
+  {% endif %}
+  <modal-dialog id="PopupModal-extra_product" class="product-popup-modal">
+        <div
+          role="dialog"
+          aria-label="extra_product_modal"
+          aria-modal="true"
+          class="product-popup-modal__content"
+          tabindex="-1"
+        >
+          <div class="popup-top-bar">
+          <h1 class="h2">View all colours</h1>
+          <button
+            id="ModalClose-extra_product"
+            type="button"
+            class="product-popup-modal__toggle"
+            aria-label="{{ 'accessibility.close' | t }}"
+          >
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </button>
+        </div>
+          <div class="product-popup-modal__content-info">
+            
+            <div class="all_extra_data">
+              {% for product in product.metafields.custom.extra_product.value %}
+                {% assign color_image = product.metafields.custom.color_image.value %}
+                {% assign color_title = product.metafields.custom.color_title %}
+                <div class="image-text-container">
+                    <a href="{{ product.url }}">
+                      {{ color_image.src | image_url: width: color_image.width, height: color_image.height | image_tag: alt: article.title, loading: 'lazy'  }}
+                      <span class="inline-text">{{ color_title }}</span>
+                    </a>
+                </div>
+              {% endfor %}
+              </div>
+          </div>
+        </div>
+      </modal-dialog>
+<style>
+.all_extra_data {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+}
+ 
+.image-text-container {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  text-align: center;
+}
+ 
+.inline-text {
+   /* margin-top: 10px; */
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  text-align:left;
+  line-height:1.1;
+}
+ 
+a.flex-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 7.5px;
+  border: 1px solid #0002;
+  border-radius: 8px;
+}
+ 
+.extraproducts {
+  margin: 20px 0 0;
+}
+ 
+.extra_heading {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #000;
+}
+.image-text-container {
+	width: auto !important;flex: 1;
+}
+</style>
+ 
+

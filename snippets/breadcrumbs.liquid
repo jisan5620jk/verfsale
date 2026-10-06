@@ -1,0 +1,46 @@
+<nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+  <a href="{{ routes.root_url }}">
+    <span>
+      Home
+      {% comment %}
+      <img src="//l9119pmjb6ot49ve-51683754136.shopifypreview.com/cdn/shop/t/28/assets/home.png?v=137939639695013038781745495381" style="width: 13px;height: 13px;top: 2px;position: relative;">
+    {%  endcomment %}
+      </span>
+  </a>
+
+  {% assign breadcrumb_source = blank %}
+
+  {%- if product and product.metafields.custom.breadcrumb != blank -%}
+    {% assign breadcrumb_source = product.metafields.custom.breadcrumb %}
+  {%- elsif collection and collection.metafields.custom.breadcrumb != blank -%}
+    {% assign breadcrumb_source = collection.metafields.custom.breadcrumb %}
+  {%- endif -%}
+
+  {%- if breadcrumb_source != blank -%}
+    {% assign crumbs = breadcrumb_source | split: '>' %}
+    {% for crumb in crumbs %}
+      <span aria-hidden="true">›</span>
+      <span>{{ crumb | strip }}</span>
+    {% endfor %}
+  {%- elsif collection -%}
+    <span aria-hidden="true">›</span>
+    <a href="{{ collection.url }}">{{ collection.title }}</a>
+  {%- endif -%}
+
+{% comment %}
+  {% if collection %}
+    <span aria-hidden="true">›</span>
+    <a href="{{ collection.url }}">{{ collection.title }}</a>
+  {% endif %}
+   {% endcomment %}
+
+  {% if product %}
+    <span aria-hidden="true">›</span>
+    <span>{{ product.title }}</span>
+  {% endif %}
+  
+  {% if page %}
+    <span aria-hidden="true">›</span>
+    <span>{{ page.title }}</span>
+  {% endif %}
+</nav>

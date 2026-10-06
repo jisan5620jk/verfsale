@@ -1,0 +1,397 @@
+{% comment %}
+  Shopify Storefront Tracking v2.3.1
+  
+  WHAT THIS DOES:
+  Tracks product views, cart interactions, and collection browsing
+  on your storefront (before checkout) and sends to GTM
+  
+  HOW TO INSTALL:
+  1. In Shopify Admin, go to Online Store > Themes > Edit Code
+  2. Click "Snippets" folder > Add new snippet
+  3. Name it: storefront-tracking
+  4. Paste this entire code
+  5. Save the file
+  6. Open theme.liquid and add before </head>:
+     {% render 'storefront-tracking' %}
+{% endcomment %}
+
+<script>
+(function() {
+  // ===============================================
+  // CONFIGURATION - MUST MATCH YOUR PIXEL SETTINGS
+  // ===============================================
+  
+  const CONFIG = {
+    eventPrefix: '',        // Must match your pixel's eventPrefix
+    useFormattedId: false,   // Must match your pixel's useFormattedId
+    debug: false,           // Set to true to see console logs
+  };
+  
+  // ===============================================
+  // DO NOT MODIFY BELOW THIS LINE
+  // ===============================================
+  
+  // Get and store the shop's country code
+  const countryCode = '{{ shop.address.country_code | default: "NL" }}';
+  localStorage.setItem('shopifyCountryCode', countryCode);
+  
+  // Initialize Google's dataLayer
+  window.dataLayer = window.dataLayer || [];
+  
+  /**
+   * Creates formatted item ID to match Google's requirements
+   */
+  function formatItemId(productId, variantId) {
+    if (!CONFIG.useFormattedId) return String(variantId);
+    return `shopify_${countryCode}_${productId}_${variantId}`;
+  }
+  
+  /**
+   * Sends event to GTM via dataLayer
+   */
+  function pushEvent(eventName, eventData) {
+    // Clear previous ecommerce data
+    window.dataLayer.push({ ecommerce: null });
+    
+    // Push new event
+    window.dataLayer.push({
+      event: CONFIG.eventPrefix + eventName,
+      ...eventData
+    });
+    
+    // Debug logging
+    if (CONFIG.debug) {
+      console.log('[Storefront]', eventName, eventData);
+    }
+  }
+  
+  // ===============================================
+  // CART TRACKING - AJAX INTERCEPTION
+  // ===============================================
+  
+  // Store cart state for comparison
+  let cartSnapshot = null;
+  
+  /**
+   * Fetches current cart data from Shopify
+   */
+  async function getCart() {
+    try {
+      const response = await fetch('/cart.js');
+      return await response.json();
+    } catch (error) {
+      console.error('[Storefront] Failed to fetch cart:', error);
+      return null;
+    }
+  }
+  
+  /**
+   * Initialize cart tracking with retry on failure
+   */
+  async function initCartTracking() {
+    cartSnapshot = await getCart();
+    // Retry once if initial fetch fails
+    if (!cartSnapshot) {
+      setTimeout(() => {
+        getCart().then(c => cartSnapshot = c).catch(() => {});
+      }, 1000);
+    }
+  }
+  
+  /**
+   * Detects cart changes including additions, removals, and quantity changes
+   */
+  function detectCartChanges(oldCart, newCart) {
+    // Create lookup maps by item key
+    const byKey = arr => Object.fromEntries((arr || []).map(x => [x.key, x]));
+    const before = byKey(oldCart.items || []);
+    const after = byKey(newCart.items || []);
+    const allKeys = new Set([...Object.keys(before), ...Object.keys(after)]);
+    
+    // Check each item for changes
+    allKeys.forEach(key => {
+      const oldItem = before[key];
+      const newItem = after[key];
+      
+      // New item added (not via /cart/add)
+      if (!oldItem && newItem) {
+        pushEvent('add_to_cart', {
+          ecommerce: {
+            currency: '{{ shop.currency }}',
+            value: Number(newItem.final_price / 100) * Number(newItem.quantity || 1),
+            items: [{
+              id: formatItemId(newItem.product_id, newItem.variant_id),
+              item_id: formatItemId(newItem.product_id, newItem.variant_id),
+              item_name: newItem.product_title,
+              price: Number(newItem.final_price / 100),
+              quantity: Number(newItem.quantity || 1),
+              item_brand: newItem.vendor,
+              item_category: newItem.product_type,
+              item_variant: newItem.variant_title !== 'Default Title' ? newItem.variant_title : undefined
+            }]
+          }
+        });
+        return;
+      }
+      
+      // Item completely removed
+      if (oldItem && !newItem) {
+        pushEvent('remove_from_cart', {
+          ecommerce: {
+            currency: '{{ shop.currency }}',
+            value: Number(oldItem.final_price / 100) * Number(oldItem.quantity || 1),
+            items: [{
+              id: formatItemId(oldItem.product_id, oldItem.variant_id),
+              item_id: formatItemId(oldItem.product_id, oldItem.variant_id),
+              item_name: oldItem.product_title,
+              price: Number(oldItem.final_price / 100),
+              quantity: Number(oldItem.quantity || 1)
+            }]
+          }
+        });
+        return;
+      }
+      
+      // Quantity changed
+      if (oldItem && newItem) {
+        const delta = Number(newItem.quantity || 0) - Number(oldItem.quantity || 0);
+        if (!delta) return;
+        
+        const eventName = delta > 0 ? 'add_to_cart' : 'remove_from_cart';
+        const quantity = Math.abs(delta);
+        
+        pushEvent(eventName, {
+          ecommerce: {
+            currency: '{{ shop.currency }}',
+            value: Number(newItem.final_price / 100) * quantity,
+            items: [{
+              id: formatItemId(newItem.product_id, newItem.variant_id),
+              item_id: formatItemId(newItem.product_id, newItem.variant_id),
+              item_name: newItem.product_title,
+              price: Number(newItem.final_price / 100),
+              quantity: quantity,
+              item_brand: newItem.vendor,
+              item_category: newItem.product_type,
+              item_variant: newItem.variant_title !== 'Default Title' ? newItem.variant_title : undefined
+            }]
+          }
+        });
+      }
+    });
+  }
+  
+  /**
+   * Intercept all fetch requests to track cart changes
+   */
+  const originalFetch = window.fetch;
+  window.fetch = function(...args) {
+    return originalFetch.apply(this, args).then(async (response) => {
+      const url = args[0];
+      
+      // Check if this is a cart-related request
+      if (url && url.includes('/cart/') && response.ok) {
+        const clonedResponse = response.clone();
+        
+        // Handle add to cart
+        if (url.includes('/cart/add')) {
+          const data = await clonedResponse.json();
+          const items = Array.isArray(data.items) ? data.items : [data];
+          
+          // Track each added item
+          items.forEach(item => {
+            pushEvent('add_to_cart', {
+              ecommerce: {
+                currency: '{{ shop.currency }}',
+                value: Number(item.final_price / 100) * Number(item.quantity || 1), // FIX: Multiply by quantity
+                items: [{
+                  id: formatItemId(item.product_id, item.variant_id),
+                  item_id: formatItemId(item.product_id, item.variant_id),
+                  item_name: item.product_title,
+                  price: Number(item.final_price / 100),
+                  quantity: item.quantity,
+                  item_brand: item.vendor,
+                  item_category: item.product_type,
+                  item_variant: item.variant_title !== 'Default Title' ? item.variant_title : undefined,
+                }]
+              }
+            });
+          });
+          
+          // Update snapshot after add to cart
+          try { 
+            cartSnapshot = await getCart(); 
+          } catch(e) {
+            if (CONFIG.debug) console.error('[Storefront] Failed to update snapshot after add:', e);
+          }
+        }
+        
+        // Handle cart updates (quantity changes, removals)
+        else if (url.includes('/cart/change') || url.includes('/cart/update')) {
+          const newCart = await clonedResponse.json();
+          if (cartSnapshot) {
+            detectCartChanges(cartSnapshot, newCart);
+          }
+          cartSnapshot = newCart;
+        }
+      }
+      
+      return response;
+    });
+  };
+  
+  /**
+   * XHR fallback for cart changes (covers older themes/apps)
+   */
+  const _send = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.send = function() {
+    const xhr = this;
+    const oldOnload = xhr.onload;
+    
+    xhr.onload = function() {
+      try {
+        const url = xhr.responseURL || '';
+        // Check for cart-related URLs
+        if (/\/cart\/(add|change|update|clear)/.test(url) && xhr.responseText) {
+          const response = JSON.parse(xhr.responseText);
+          
+          // Handle /cart/add via XHR
+          if (url.includes('/cart/add')) {
+            const items = Array.isArray(response.items) ? response.items : [response];
+            items.forEach(item => {
+              pushEvent('add_to_cart', {
+                ecommerce: {
+                  currency: '{{ shop.currency }}',
+                  value: Number(item.final_price / 100) * Number(item.quantity || 1), // FIX: Multiply by quantity
+                  items: [{
+                    id: formatItemId(item.product_id, item.variant_id),
+                    item_id: formatItemId(item.product_id, item.variant_id),
+                    item_name: item.product_title,
+                    price: Number(item.final_price / 100),
+                    quantity: item.quantity,
+                    item_brand: item.vendor,
+                    item_category: item.product_type,
+                    item_variant: item.variant_title !== 'Default Title' ? item.variant_title : undefined,
+                  }]
+                }
+              });
+            });
+            
+            // Update snapshot after XHR add
+            getCart().then(c => { 
+              cartSnapshot = c; 
+            }).catch(e => {
+              if (CONFIG.debug) console.error('[Storefront] Failed to update snapshot after XHR add:', e);
+            });
+          }
+          // Handle cart changes via XHR
+          else if (cartSnapshot) {
+            detectCartChanges(cartSnapshot, response);
+            cartSnapshot = response;
+          }
+        }
+      } catch(_) {
+        // Silently ignore parsing errors
+      }
+      
+      // Call original onload if it exists
+      if (oldOnload) oldOnload.apply(this, arguments);
+    };
+    
+    return _send.apply(this, arguments);
+  };
+  
+  // Initialize cart tracking when page loads
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartTracking);
+  } else {
+    initCartTracking();
+  }
+  
+  // ===============================================
+  // PAGE-SPECIFIC TRACKING
+  // ===============================================
+  
+  {% comment %} Track product page views {% endcomment %}
+  {% if template contains 'product' %}
+  pushEvent('view_item', {
+    ecommerce: {
+      currency: '{{ shop.currency }}',
+      value: {{ product.selected_or_first_available_variant.price | divided_by: 100.0 }},
+      items: [{
+        id: formatItemId('{{ product.id }}', '{{ product.selected_or_first_available_variant.id }}'),
+        item_id: formatItemId('{{ product.id }}', '{{ product.selected_or_first_available_variant.id }}'),
+        item_name: '{{ product.title | escape }}',
+        price: Number({{ product.selected_or_first_available_variant.price | divided_by: 100.0 }}),
+        item_brand: '{{ product.vendor | escape }}',
+        item_category: '{{ product.type | escape }}',
+        {% if product.selected_or_first_available_variant.title != 'Default Title' %}
+        item_variant: '{{ product.selected_or_first_available_variant.title | escape }}',
+        {% endif %}
+        quantity: 1
+      }]
+    }
+  });
+  {% endif %}
+  
+  {% comment %} Track collection page views {% endcomment %}
+  {% if template contains 'collection' %}
+  pushEvent('view_item_list', {
+    ecommerce: {
+      item_list_id: '{{ collection.id }}',
+      item_list_name: '{{ collection.title | escape }}',
+      items: [
+        {% for product in collection.products limit: 20 %}
+        {
+          id: formatItemId('{{ product.id }}', '{{ product.selected_or_first_available_variant.id }}'),
+          item_id: formatItemId('{{ product.id }}', '{{ product.selected_or_first_available_variant.id }}'),
+          item_name: '{{ product.title | escape }}',
+          price: Number({{ product.price | divided_by: 100.0 }}),
+          item_brand: '{{ product.vendor | escape }}',
+          item_category: '{{ product.type | escape }}',
+          item_list_id: '{{ collection.id }}',
+          item_list_name: '{{ collection.title | escape }}',
+          index: {{ forloop.index }},
+          quantity: 1
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+  });
+  {% endif %}
+  
+  {% comment %} Track search results {% endcomment %}
+  {% if template contains 'search' %}
+  {% if search.performed %}
+  pushEvent('view_search_results', {
+    search_term: '{{ search.terms | escape }}'
+  });
+  {% endif %}
+  {% endif %}
+  
+  {% comment %} Track cart page views {% endcomment %}
+  {% if template contains 'cart' %}
+  pushEvent('view_cart', {
+    ecommerce: {
+      currency: '{{ cart.currency.iso_code }}',
+      value: Number({{ cart.total_price | divided_by: 100.0 }}),
+      items: [
+        {% for item in cart.items %}
+        {
+          id: formatItemId('{{ item.product_id }}', '{{ item.variant_id }}'),
+          item_id: formatItemId('{{ item.product_id }}', '{{ item.variant_id }}'),
+          item_name: '{{ item.product.title | escape }}',
+          price: Number({{ item.final_price | divided_by: 100.0 }}),
+          quantity: {{ item.quantity }},
+          item_brand: '{{ item.vendor | escape }}',
+          item_category: '{{ item.product.type | escape }}',
+          {% if item.variant.title != 'Default Title' %}
+          item_variant: '{{ item.variant.title | escape }}',
+          {% endif %}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+  });
+  {% endif %}
+})();
+</script>

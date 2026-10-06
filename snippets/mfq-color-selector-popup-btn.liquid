@@ -1,0 +1,145 @@
+<style>
+  #color_popup_selected_color_placeholder_mob{
+    display:none;
+  }
+  .color_pop_btns {
+    display: inline-flex
+;
+}
+  @media (max-width: 768px) {
+    .color_popup_trg > span {
+      display:none !important;
+    }
+    .color_popup_trg{
+      {% comment %} margin-right:0px !important; {% endcomment %}
+      justify-content:center;
+      height: 40px !important;
+    }
+    #color_popup_selected_color_placeholder{
+      display:none !important;
+    }
+    #color_popup_selected_color_placeholder_mob{
+      display:flex;
+      background: white;
+      width: 50%;
+      height: 100%;
+    }
+    .color_popup_edit_trg{
+      width:50px !important;
+      height: 36px !important;
+    }
+    .color_pop_btns .color_popup_edit_trg{
+      position: relative;
+      top: 18px;
+    }
+  }
+</style>
+
+
+  <button type="button" class="color_popup_trg" style="margin-right:10px;cursor:pointer;background: white;border: 1px solid #dadada;border-radius: 5px;font-weight: 600;display: flex;align-items: center;padding: 5px 10px;gap: 6px;width:fit-content;height:44px;" >
+    <img style="width: 22px;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/ico.png?v=1746795708" />
+    <span style="font-size:12px" >Vind jouw kleur</span>
+  </button>
+  
+  <button type="button" class="color_popup_edit_trg" style="position:relative;margin-right:10px;cursor:pointer;background: #dbdbdb;border: 1px solid #dadada;border-radius: 5px;display: none;align-items: center;padding: 0px 0px;width: 170px;height: 46px;width:fit-content;">
+    <span class="mfq_color_popup_selected_clear" style="position: absolute;top: -5px;left: -5px;background: red;height: fit-content;font-size: 14px;text-align: center;display: flex;align-items: center;justify-content: center;color: white;border-radius: 14px;width: 16px;">x</span>
+    <div id="color_popup_selected_color_placeholder_mob" ></div>
+    <div id="color_popup_selected_color_placeholder" style="width: 85%;background: white;height: 100%;display: flex;align-items: center;gap: 8px;padding: 0px 10px;">
+     <span class="mfq_color_popup_name" style="width: 74px;font-size: 12px;font-weight: 600;">RAL 9003 Signaalwit</span>
+     <img src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/pencil-solid.svg?v=1746035850" style="width: 14px;">
+     <span style="text-decoration: underline;">Wijzig</span>
+    </div>
+  </button>
+
+  
+  <script>
+  jQuery(document).ready(function(){
+
+    function truncateText(str, maxLength) {
+      if (typeof str !== 'string') return '';
+      return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
+    }
+
+    function resetSelectedColorUI() {
+      // clear input & texts
+      $('.mfq_popup_selected_color').val('');
+      $('#mfq_popup_selected_product_color').text('');
+
+      // reset buttons
+      $('.color_popup_edit_trg')
+        .css('background', '#dbdbdb')
+        .css('display', 'none');
+      $('.color_popup_trg').css('display', 'flex');
+
+      // hide small selected bar + reset borders
+      $('#mfq_color_popup_selected').css('display','none');
+      $('.mfq_popular_color_popup_card').css('border','1px solid #c2c2c2');
+    }
+
+    function isColorSelected(){      
+      const isSelectedColor = JSON.parse(localStorage.getItem('selected_color')) || false;
+
+      const params = new URLSearchParams(window.location.search);
+      const hex = params.get("hex");
+      const name = params.get("name");
+
+      console.log(hex, name);
+
+      if (isSelectedColor) {
+        let NAME = truncateText(isSelectedColor.name, 6);
+
+        $('#mfq_color_popup_selected_name').text(NAME);
+        $('#mfq_popup_selected_product_color').text(isSelectedColor.name);
+        $('.mfq_color_popup_name').text(NAME);
+        $('.color_popup_trg').css('display','none');
+        $('.color_popup_edit_trg')
+          .css('background', isSelectedColor.hex)
+          .css('display','flex');
+        $('#mfq_color_popup_selected_color').css('background', isSelectedColor.hex);
+        $('#mfq_color_popup_selected').css('display','flex');
+        
+        return isSelectedColor.name;
+      } else if (hex && name) {
+        $('#mfq_color_popup_selected_name').text(name);
+        $('#mfq_popup_selected_product_color').text(name);
+        $('.mfq_color_popup_name').text(name);
+        $('.color_popup_trg').css('display','none');
+        $('.color_popup_edit_trg')
+          .css('background', `#${hex}`)
+          .css('display','flex');
+        $('#mfq_color_popup_selected_color').css('background', `#${hex}`);
+        $('#mfq_color_popup_selected').css('display','flex');
+        
+        return name;
+      } else {
+        resetSelectedColorUI();
+        return '';
+      }
+    }
+
+    // init state
+    const color = isColorSelected();
+    if (color) {
+      $('.mfq_popup_selected_color').val(color);
+    }
+
+    // open popup on main / edit button
+    $('.color_popup_trg, .color_popup_edit_trg').on('click', function(){
+      $('#mfq_color_popup_wrapper').fadeIn(200).css('display','flex');
+    });
+
+    // CLOSE (X) – clear color and DO NOT open popup
+    $('.mfq_color_popup_selected_clear').on('click', function(e){
+      e.stopPropagation();               // stop click from reaching .color_popup_edit_trg
+      localStorage.removeItem('selected_color');
+      resetSelectedColorUI();
+    });
+
+    // popup close button
+    $('#mfq_color_popup_close').on('click', function(){
+      $('#mfq_color_popup_wrapper').fadeOut(200);
+    });
+
+    console.log('Jquery Detected!');
+  });
+</script>

@@ -1,0 +1,208 @@
+<style>
+ .tab_btn{
+  background: white;
+  border: 1px solid #c0c0c0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  width: 33%;
+  cursor:pointer;
+ } 
+ .tab_btn.selected{
+  background: #b90066;
+  color:white;
+  border: 1px solid #b90066;
+ }
+ .tab_btn:hover{
+  border: 1px solid #b90066;
+ }
+
+ .product_cards{
+  display: flex;
+  width: 48%;
+  align-items: center;
+  border: 1px solid #c0c0c0;
+  padding: 13px;
+  gap: 10px;
+  border-radius: 10px;
+  cursor:pointer;
+ }
+ .product_cards:hover{
+  background: #ffd1eb;
+ }
+
+ @media only screen and (max-width: 600px) {
+   #collection_products{
+    flex-direction:column !important;
+   }    
+   #collection_product_img,#collection_tabs{
+    width:100% !important;
+   }
+   #wall_paint_inside > a {
+    width:100% !important;
+   }
+   #wall_paint_inside > a > img {
+    width:65px !important;
+   }
+   #wall_paint_inside > a > span {
+    font-size: 16px !important;
+   }
+ }
+
+</style>
+
+{% assign collection_color = collection.metafields.custom.collection_color.value | split: '@' %}
+
+<div style="display:flex;flex-direction:column;margin: 50px 8%;gap:20px" >
+ 
+ {% comment %} Heading {% endcomment %}
+ <div style="display:flex;flex-direction:column;gap:10px" >
+  <h2 style="font-size: 32px;font-weight: 900;margin: 0px;" >{{collection.title}} - {{ collection_color[0] }}</h2>
+  <div style="display:flex;gap:20px" > 
+   <div style="display: flex;align-items: center;gap: 5px;font-size:14px" >
+    <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+    <span>Reading time: 1 minute</span>
+   </div>  
+   <div style="display: flex;align-items: center;gap: 5px;font-size:14px" >
+    <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+    </svg>
+    <span>{{ collection.published_at | date: "%B %d, %Y" }}</span>
+   </div>    
+  </div>
+ </div>
+ {% comment %} Heading {% endcomment %}
+
+
+ {% comment %} Collection Products {% endcomment %}
+ <div id="collection_products" style="display:flex;gap:20px" >
+  
+  <div id="collection_product_img" style="width:48%;background:{{collection_color[1]}};border-radius: 10px;" ><img style="border-radius: 10px;width:100%;height: 100%;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/1.png?v=1749237159" /></div>
+  
+  <div id="collection_tabs" style="display:flex;flex-direction:column;gap:10px;padding-top:20px;width: 52%;" >
+   <h2 style="font-size: 22px;font-weight: 700;margin: 0px;" >Order {{ collection.title | split: "-" | first | strip }} directly:</h2>
+   {% comment %} Tabs {% endcomment %}
+   <div style="display: flex;width: 100%;justify-content: space-between;gap: 18px;" >
+    <button class="tab_btn selected" type="wall_paint_inside" >Wall paint inside</button>  
+    <button class="tab_btn" type="interior_paint" >Interior paint</button>  
+    <button class="tab_btn" type="exterior_paint" >Exterior paint</button>  
+   </div>
+  {% comment %} Tabs {% endcomment %}
+  {% comment %} Tab Content {% endcomment %}
+   <div id="wall_paint_inside" style="display: flex;flex-wrap: wrap;justify-content: space-between;margin-top:16px" >
+   
+    {% for product in collection.products %}
+     {% if product.tags contains "wall paint inside" %} 
+      <a href="{{ product.url }}?hex={{ collection_color[1] | remove: "#" }}&name={{ collection_color[0] }}" class="product_cards" style="text-decoration:none; color:inherit; display:flex; gap:10px; margin-bottom:15px;">
+        
+        <img style="width:50px;" 
+             src="{{ product.featured_image | img_url: '1280x1280' }}" 
+             alt="{{ product.title }}">
+    
+        <div style="display:flex; flex-direction:column; font-size:15px;">
+          <span style="font-weight:700; color:#b90066;">
+            {{ product.title }}
+          </span>
+    
+          <ul style="margin:0; padding-left:16px; color:#bb6192; font-size:14px;">
+            {% for tag in product.tags limit:4 %}
+              <li>{{ tag }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+    
+      </a>
+     {% endif %} 
+    {% endfor %}
+
+   </div>
+   <div id="interior_paint" style="display: none;flex-wrap: wrap;justify-content: space-between;margin-top:16px" >
+   
+    {% for product in collection.products %}
+     {% if product.tags contains "interior paint" %} 
+      <a href="{{ product.url }}?hex={{ collection_color[1] | remove: "#" }}&name={{ collection_color[0] }}" class="product_cards" style="text-decoration:none; color:inherit; display:flex; gap:10px; margin-bottom:15px;">
+        
+        <img style="width:50px;" 
+             src="{{ product.featured_image | img_url: '1280x1280' }}" 
+             alt="{{ product.title }}">
+    
+        <div style="display:flex; flex-direction:column; font-size:15px;">
+          <span style="font-weight:700; color:#b90066;">
+            {{ product.title }}
+          </span>
+    
+          <ul style="margin:0; padding-left:16px; color:#bb6192; font-size:14px;">
+            {% for tag in product.tags limit:4 %}
+              <li>{{ tag }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+    
+      </a>
+     {% endif %} 
+    {% endfor %}
+
+   </div>
+   <div id="exterior_paint" style="display: none;flex-wrap: wrap;justify-content: space-between;margin-top:16px" >
+   
+    {% for product in collection.products %}
+     {% if product.tags contains "exterior paint" %} 
+      <a href="{{ product.url }}?hex={{ collection_color[1] | remove: "#" }}&name={{ collection_color[0] }}" class="product_cards" style="text-decoration:none; color:inherit; display:flex; gap:10px; margin-bottom:15px;">
+        
+        <img style="width:50px;" 
+             src="{{ product.featured_image | img_url: '1280x1280' }}" 
+             alt="{{ product.title }}">
+    
+        <div style="display:flex; flex-direction:column; font-size:15px;">
+          <span style="font-weight:700; color:#b90066;">
+            {{ product.title }}
+          </span>
+    
+          <ul style="margin:0; padding-left:16px; color:#bb6192; font-size:14px;">
+            {% for tag in product.tags limit:4 %}
+              <li>{{ tag }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+    
+      </a>
+     {% endif %} 
+    {% endfor %}
+
+   </div>
+  {% comment %} Tab Content {% endcomment %}
+  </div>
+
+ </div>
+ {% comment %} Collection Products {% endcomment %}
+
+ {% comment %} Description {% endcomment %}
+ <div style="font-size: 14px;" >
+   <div style="float: right;display: flex;margin: 0 0 10px 20px;max-width: 60%;background: {{collection_color[1]}};width: 325px;height: 118px;border-radius: 10px;" ></div>
+   {{ collection.description }}
+ </div>
+ {% comment %} Description {% endcomment %}
+
+</div>
+
+
+<script>
+$(document).ready(()=>{
+
+  $('.tab_btn').on('click',function(){
+    
+    $('.tab_btn').removeClass('selected');
+    $('#wall_paint_inside').css('display','none')
+    $('#interior_paint').css('display','none')
+    $('#exterior_paint').css('display','none')
+
+    let id = $(this).attr('type');
+    $(this).addClass('selected')
+    
+    $(`#${id}`).css('display','flex').hide().fadeIn(200);
+  
+  })
+
+})
+</script>

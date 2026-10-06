@@ -1,0 +1,157 @@
+{%- comment -%}
+Snippets/blog-search-form.liquid
+Drop this snippet into your theme and include it on blog/article pages or anywhere.
+Usage examples:
+  {% render 'blog-search-form' %}
+  {% render 'blog-search-form', placeholder: 'Search our blog…' %}
+
+This form searches only blog articles using Shopify's storefront search.
+{%- endcomment -%}
+
+<form action="/search" method="get" role="search" class="blog-search-form" aria-label="Blog search">
+  <input type="hidden" name="type" value="article">
+  <input type="hidden" name="options[prefix]" value="last"><!-- enables partial matches -->
+
+  <label for="BlogSearchInput" class="visually-hidden">Search blog</label>
+  <div class="blog-search-input">
+    <input
+      id="BlogSearchInput"
+      type="search"
+      name="q"
+      value="{{ request.params.q | escape }}"
+      placeholder="{{ placeholder | default: 'Search the blog' }}"
+      autocapitalize="off"
+      autocomplete="off"
+      autocorrect="off"
+      enterkeyhint="search"
+      aria-controls="BlogSearchSuggestions"
+      aria-expanded="false"
+      aria-autocomplete="list"
+    >
+    <button class="blog-search-submit" type="submit" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Live suggestions (optional) -->
+  <ul id="BlogSearchSuggestions" class="blog-search-suggestions" role="listbox" hidden></ul>
+</form>
+
+<style>
+.blog-search-form {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    max-width: 350px;
+    position: relative;
+    width: 100%;
+}
+  .blog-search-input { display:flex; align-items:center; border:1px solid rgb(229,231,235); border-radius:9999px; padding:.5rem .75rem; }
+  .blog-search-input:focus-within { box-shadow:0 0 0 3px rgba(59,130,246,.35); border-color:rgba(59,130,246,1); }
+  .blog-search-input input { flex:1; border:0; outline:none; background:transparent; font:inherit; padding:.25rem .5rem;    box-shadow: unset; }
+  .blog-search-submit { border:0; background:transparent; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:.25rem; }
+  .blog-search-suggestions {
+    list-style: none;
+    margin: .25rem 0 0;
+    padding: .25rem;
+    border: 1px solid rgb(229, 231, 235);
+    border-radius: .75rem;
+    max-height: 18rem;
+    overflow: auto;
+    background: white;
+    position: absolute;
+    top: 100%;
+    z-index: 9;
+}
+  .blog-search-suggestions li { padding:.5rem .5rem; border-radius:.5rem; }
+  .blog-search-suggestions li[aria-selected="true"],
+  .blog-search-suggestions li:hover { background:rgb(243,244,246); }
+  .visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap; }
+</style>
+
+<script>
+(function() {
+  const input = document.getElementById('BlogSearchInput');
+  const list = document.getElementById('BlogSearchSuggestions');
+  if (!input || !list) return;
+
+  let controller;
+  let activeIndex = -1;
+
+  function clearSuggestions() {
+    list.innerHTML = '';
+    list.hidden = true;
+    input.setAttribute('aria-expanded', 'false');
+    activeIndex = -1;
+  }
+
+  input.addEventListener('input', async () => {
+    const q = input.value.trim();
+    if (q.length < 2) return clearSuggestions();
+
+    if (controller) controller.abort();
+    controller = new AbortController();
+
+    try {
+      const url = new URL('/search/suggest.json', window.location.origin);
+      url.searchParams.set('q', q);
+      url.searchParams.set('resources[type]', 'article');
+      url.searchParams.set('resources[limit]', '6');
+      url.searchParams.set('resources[options][fields]', 'title,body');
+
+      const res = await fetch(url.toString(), { signal: controller.signal, headers: { 'Accept': 'application/json' } });
+      if (!res.ok) throw new Error('Network error');
+      const data = await res.json();
+      const items = (data.resources?.results?.articles || []).slice(0, 6);
+
+      if (!items.length) return clearSuggestions();
+
+      list.innerHTML = items.map((a, i) => `
+        <li role="option" id="sugg-${i}" tabindex="-1" data-url="${a.url}" aria-selected="${i===0}">
+          <strong>${a.title.replace(/</g,'&lt;')}</strong>
+          ${a.body ? `<div class="desc">${a.body.replace(/<[^>]+>/g,'').slice(0,90)}…</div>` : ''}
+        </li>
+      `).join('');
+      list.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+      activeIndex = 0;
+    } catch (e) {
+      clearSuggestions();
+    }
+  });
+
+  list.addEventListener('click', (e) => {
+    const li = e.target.closest('li[role="option"]');
+    if (!li) return;
+    window.location.href = li.dataset.url;
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const options = Array.from(list.querySelectorAll('[role="option"]'));
+    if (list.hidden || !options.length) return;
+
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = (activeIndex + (e.key === 'ArrowDown' ? 1 : -1) + options.length) % options.length;
+      options.forEach((opt, i) => opt.setAttribute('aria-selected', String(i === activeIndex)));
+      options[activeIndex].focus();
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const target = options[activeIndex] || options[0];
+      if (target) window.location.href = target.dataset.url;
+    }
+
+    if (e.key === 'Escape') {
+      clearSuggestions();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.blog-search-form')) clearSuggestions();
+  });
+})();
+</script>

@@ -1,0 +1,267 @@
+
+<div id="system-calculator" class="system-calculator">
+  <div class="system-calculator__header">
+    <div class="calc-steps_guide-wrapper">
+    <h2>Benodigde producten</h2>
+    <div class="system-calc-steps_guide">
+  <div class="system-calc-steps_content">
+  <div class="system_calc_step"><h3>{{ section.settings.step1_title }}</h3> <p>{{ section.settings.step1 }}</p></div>
+  <div class="system_calc_step"><h3>{{ section.settings.step2_title }}</h3> <p>{{ section.settings.step2 }}</p></div>
+  <div class="system_calc_step"><h3>{{ section.settings.step3_title }}</h3> <p>{{ section.settings.step3 }}</p></div>
+  <div class="system_calc_step"><h3>{{ section.settings.step4_title }}</h3> <p>{{ section.settings.step4 }}</p></div>
+</div>
+  </div>
+</div>
+
+    <label for="system-calculator-area">
+      Oppervlakte (m²)
+    </label>
+    <input
+      id="system-calculator-area"
+      type="number"
+      min="1"
+      step="1"
+      value="10"
+      class="system-calculator__input"
+    >
+  </div>
+    <p><b>Op basis van het ingevoerde oppervlak heb je de volgende producten nodig voor dit coatingsysteem.</b></p>
+
+<div class="system-calculator_wrapper-main"> 
+  <ul id="system-calculator-products" class="system-calculator__products">
+    {% for product in collection.products %}
+      {% assign coverage = product.metafields.custom.coverage_per_m2 %}
+
+      {% if coverage != blank %}
+        {%- comment -%}
+          Detect the color option (Kleur / Color) if it exists
+        {%- endcomment -%}
+        {%- assign color_option_index = -1 -%}
+        {%- assign color_values_string = '' -%}
+
+        {% for option in product.options_with_values %}
+          {% assign opt_name = option.name | downcase %}
+
+          {% assign is_kleur = false %}
+          {% assign is_color = false %}
+
+          {% if opt_name contains 'kleur' %}
+            {% assign is_kleur = true %}
+          {% endif %}
+
+          {% if opt_name contains 'color' %}
+            {% assign is_color = true %}
+          {% endif %}
+
+          {% if color_option_index == -1 %}
+            {% if is_kleur or is_color %}
+              {% assign color_option_index = forloop.index0 %}
+              {% assign color_values_string = option.values | join: '||' %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+
+        {% assign color_values_array = color_values_string | split: '||' %}
+
+        <li
+          class="system-product"
+          data-system-product
+          data-product-id="{{ product.id }}"
+          data-coverage="{{ coverage }}"
+          data-title="{{ product.title | escape }}"
+          data-unit="{{ product.metafields.custom.unit_type | default: 'L' }}"
+          data-color-index="{{ color_option_index }}"
+        >
+
+          <div class="sidebar-left">
+            <!-- PRODUCT IMAGE -->
+            <div class="system-product__image">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | img_url: '200x200' }}"
+                  alt="{{ product.title }}"
+                >
+              {% endif %}
+            </div>
+
+            <!-- SELECT CHECKBOX -->
+            <label class="system-product__select">
+              <input
+                type="checkbox"
+                class="system-product__checkbox"
+                checked
+              >
+              <span>Toevoegen</span>
+            </label>
+          </div>
+
+          <div class="system-product__content">
+            <!-- TITLE -->
+            <div class="system-product__title">
+              {{ product.title }}
+            </div>
+
+            <!-- COLOR DROPDOWN (if product has a Color/Kleur option) -->
+
+            <div class="system-product__inputs">
+            {% if color_option_index != -1 and color_values_string != '' %}
+              <div class="system-product__colors">
+                <label class="system-product__label">
+                  Kleur:  <span class="color-swatch_label">{{ color_values_array.first }}</span>
+                  <select class="system-color-select" data-color-select>
+                    {% for color_value in color_values_array %}
+                      {% if color_value != '' %}
+                        <option value="{{ color_value | escape }}">
+                          {{ color_value }}
+                        </option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+
+
+                  
+                </label>
+                <div class="sc-colors-items">
+                     {% for color_value in color_values_array %}
+                {% if color_value != '' %}
+                  <span class="sc-swatch{% if forloop.first %} active-sc{% endif %}" data-value="{{ color_value }}">
+                    {%- liquid
+            assign color_file_name = color_value | handle | append: '.' | append: 'png'
+            assign color_image = color_file_name | file_img_url:'70x' | prepend: 'https:' | split: '?' | first
+            assign color_swatch_fallback = value | split: ' ' | last | handle
+          -%}
+          <span class="sc-color"  data-img-url="{{ color_image }}" style="background-color: {{ color_swatch_fallback }};background-image: url({{ color_image }});"></span>
+       
+                  </span>
+                {% endif %}
+              {% endfor %}
+                  </div>
+              </div>
+            {% endif %}
+
+            <!-- SIZE SELECTOR (ALL VARIANTS WITH LITERS, EVEN IF OUT OF STOCK) -->
+            <div class="system-product__sizes" data-size-options>
+              {% assign seen_sizes = ',' %}
+              {% for variant in product.variants %}
+                {% assign size = variant.metafields.custom.package_liters %}
+                {% if size != blank %}
+                  {% assign key = size | append: ',' %}
+                  {% unless seen_sizes contains key %}
+                    <button
+                      type="button"
+                      class="system-size-option"
+                      data-size="{{ size }}"
+                    >
+                      {{ size }} {{ product.metafields.custom.unit_type | default: 'L' }} — {{ variant.price | money }}
+                    </button>
+                    {% assign seen_sizes = seen_sizes | append: key %}
+                  {% endunless %}
+                {% endif %}
+              {% endfor %}
+            </div>
+            </div>
+
+            <!-- CALCULATION RESULTS -->
+            <div class="system-product__results">
+              <div class="system-product__details">
+                <div class="system-product__required" data-required-text></div>
+                <div class="system-product__packages" data-packages></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VARIANT JSON -->
+          <script type="application/json" class="system-variants-json">
+            [
+              {% for variant in product.variants %}
+                {
+                  "id": {{ variant.id }},
+                  "title": {{ variant.title | json }},
+                  "options": {{ variant.options | json }},
+                  "package_liters": {{ variant.metafields.custom.package_liters | default: 0 | json }},
+                  "price": {{ variant.price | divided_by: 100.0 | json }},
+                  "available": {{ variant.available | json }}
+                }{% unless forloop.last %},{% endunless %}
+              {% endfor %}
+            ]
+          </script>
+
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+ <div class="system-btn-wrapper">
+
+  <div class="system-summary-inline">
+    <div class="summary-line">
+      <span>Totale materiaalkosten</span>
+      <strong id="summary-total-price-inline">€ 0,00</strong>
+    </div>
+    <div class="summary-line">
+      <span>Totaal aantal verpakkingen</span>
+      <strong id="summary-total-containers-inline">0</strong>
+    </div>
+  </div>
+
+  <button id="system-calculator-add" type="button" class="system-calculator__add-btn button button--primary">
+    Systeem toevoegen aan winkelwagen
+  </button>
+
+  <div id="system-calculator-message" class="system-calculator__message"></div>
+</div>
+
+
+</div>
+</div>
+
+
+<script>
+  document.querySelectorAll('.sc-swatch').forEach(swatch => {
+  swatch.addEventListener('click', function () {
+
+    // 1. get data-value from clicked swatch
+    const value = this.getAttribute('data-value');
+
+    // 2. find nearest parent container
+    const parent = this.closest('.system-product__colors');
+
+    // 3. get the select inside that parent
+    const select = parent.querySelector('.system-color-select');
+
+    if (!select) return;
+
+      // ---- ACTIVE CLASS HANDLING ----
+    parent.querySelectorAll('.sc-swatch').forEach(s => s.classList.remove('active-sc'));
+    this.classList.add('active-sc');
+
+    // 4. change select value
+    select.value = value;
+
+    // 5. trigger change event (Shopify needs this)
+    select.dispatchEvent(new Event('change'));
+
+    console.log("Selected:", value);
+  });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.sc-swatch').forEach(swatch => {
+    swatch.addEventListener('click', function () {
+
+      const value = this.getAttribute('data-value');
+
+      // find the label text <span>
+      const parent = this.closest('.system-product__colors');
+      const labelSpan = parent.querySelector('.color-swatch_label');
+
+      if (labelSpan) {
+        labelSpan.textContent = value;
+      }
+
+    });
+  });
+});
+</script>

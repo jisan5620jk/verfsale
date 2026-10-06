@@ -1,0 +1,165 @@
+{{ 'akta-accordion.css' |  asset_url |  stylesheet_tag }}
+<div class="akta-accordion">
+  <div class="akta-accordion-container">
+    <div class="akta-accordion-header">
+      <h2 class="akta-accordion-title">{{ section.settings.title }}</h2>
+      <p class="akta-accordion-subtitle">{{ section.settings.subtitle }}</p>
+     </div>
+    <div class="akta-accordion-inner">
+      {% for block in section.blocks %}
+        <div class="akta-accordion-item" {{ block.shopify_attributes }}>
+          <button type="button" class="akta-accordion-item-header">
+            <span class="item-number">{{ forloop.index }}</span>
+            <div class="item-title">
+              <strong>{{ block.settings.item_title }}</strong>
+              <p>{{ block.settings.item_sub_title }}</p>
+            </div>
+            <span class="item-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.99902 5.99805L7.99805 9.99707L11.9971 5.99805" stroke="#717182" stroke-width="1.33301" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+
+          </button>
+          <div class="akta-accordion-item-body">
+            <div class="akta-accordion-item-body-img">
+              {% if block.settings.content_img != blank %}
+                <img src="{{ block.settings.content_img |  image_url }}" loading="lazy" width="" height="" alt="">
+              {% endif %}
+            </div>
+            <div class="akta-accordion-item-body-content">
+              {{ block.settings.content }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>  
+    <div class="akta-accordion-btn">
+      <a href="{{ section.settings.link_url }}">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.9971 9.99805V12.6641C13.9971 13.0176 13.8566 13.3567 13.6066 13.6066C13.3567 13.8566 13.0176 13.9971 12.6641 13.9971H3.33301C2.97947 13.9971 2.64042 13.8566 2.39043 13.6066C2.14044 13.3567 2 13.0176 2 12.6641V9.99805" stroke="white" stroke-width="1.33301" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4.66602 6.66504L7.99854 9.99756L11.3311 6.66504" stroke="white" stroke-width="1.33301" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7.99805 9.99805V2" stroke="white" stroke-width="1.33301" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ section.settings.btn_text }}
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Akta Accordion",    
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Detailed application steps"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Sub Title",
+        "default": "Step-by-step instructions for professional results"
+      },
+      {
+        "type": "url",
+        "id": "link_url",
+        "label": "Button Link"
+      },
+      {
+        "type": "text",
+        "id": "btn_text",
+        "label": "Button Text",
+        "default": "Download Instructions"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "accordion_item",
+        "name": "Accordion Item",
+        "settings": [
+          {
+            "type": "text",
+            "id": "item_title",
+            "label": "Item Title",
+            "default": "Item title"
+          },
+          {
+            "type": "text",
+            "id": "item_sub_title",
+            "label": "Item Subtitle",
+            "default": "Item subtitle"
+          },
+          {
+            "type": "image_picker",
+            "id": "content_img",
+            "label": "Content Image"
+          },
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "Content",
+            "default": "<p>Add your content here</p>"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Akta Accordion",
+        "settings": {
+        }
+      }
+    ]
+  }
+{% endschema %}
+
+
+<script>
+  if (!window.AktaAccordionInit) {
+    window.AktaAccordionInit = true;
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const accordions = document.querySelectorAll('.akta-accordion');
+
+      accordions.forEach(accordion => {
+
+        const btns = accordion.querySelectorAll('.akta-accordion-item-header');
+        if (!btns.length) return;
+
+        btns.forEach(btn => {
+          btn.addEventListener('click', () => {
+
+            const item = btn.closest('.akta-accordion-item');
+            const body = btn.nextElementSibling;
+            const isOpen = item.classList.contains('active');
+
+            // Close all items first
+            accordion.querySelectorAll('.akta-accordion-item').forEach(i => {
+              i.classList.remove('active');
+              const header = i.querySelector('.akta-accordion-item-header');
+              const content = header.nextElementSibling;
+              header.setAttribute('aria-expanded', false);
+              content.hidden = true;
+            });
+
+            // If it was closed, open the clicked item
+            if (!isOpen) {
+              item.classList.add('active');
+              btn.setAttribute('aria-expanded', true);
+              body.hidden = false;
+            }
+
+          });
+        });
+
+      });
+
+    });
+  }
+</script>
+
+

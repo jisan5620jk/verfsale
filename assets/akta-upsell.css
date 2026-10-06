@@ -1,0 +1,136 @@
+.akta-upsell {
+  padding: 100px 0;
+}
+.akta-upsell-container {
+  max-width: 1240px;
+  padding: 0 20px;
+  margin: auto;
+}
+.akta-upsell-title {
+  margin: 0 0 24px;
+  color: rgba(185, 0, 102, 1);
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 100%;
+  letter-spacing: 0.35px;
+}
+.title-badge {
+  color: rgba(69, 85, 108, 1);
+  background: rgba(241, 245, 249, 1);
+  font-family: Maven Pro;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 100%;
+  letter-spacing: 0px;
+  text-align: center;
+  padding: 11px 20px;
+  border-radius: 30px;
+  position: relative;
+  top: -10px;
+}
+.akta-upsell-subtitle {
+  margin: 0;
+  color: rgba(69, 85, 108, 1);
+  font-family: Maven Pro;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: -0.44px;
+}
+.akta-upsell-header {
+  margin-bottom: 48px;
+}
+
+.akta-upsell-products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.akta-upsell-product-title {
+  margin: 0 0 12px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: -0.44px;
+  color: rgba(185, 0, 102, 1);
+}
+.akta-upsell-product-des {
+  margin: 0px 0 26px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 160%;
+  letter-spacing: -0.15px;
+  color: rgba(69, 85, 108, 1);
+}
+.akta-upsell-product-price .price {
+  color: rgba(15, 23, 43, 1);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 0.07px;
+  display: inline-block;
+}
+.price.price--compare {
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+.akta-upsell-product-btn {
+  border: 0.7px solid rgba(230, 230, 230, 1);
+  background: transparent;
+  border-radius: 4px;
+  color: rgba(15, 23, 43, 1);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: -0.15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.akta-upsell-product-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.akta-upsell-product {
+  box-shadow:
+    0px 1px 2px -1px rgba(0, 0, 0, 0.1),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.akta-upsell-product-content {
+  padding: 16px;
+}
+.akta-upsell-product-img {
+  background: rgba(243, 245, 247, 1);
+  text-align: center;
+}
+
+.akta-upsell-product-img img {
+  max-width: 100%;
+}
+@media (max-width: 768px) {
+  .akta-upsell {
+    padding: 50px 0;
+  }
+  .akta-upsell-products {
+    grid-template-columns: 1fr;
+  }
+  .akta-upsell-title {
+    margin: 0 0 16px;
+    font-size: 32px;
+  }
+  .title-badge {
+    padding: 8px 16px;
+    top: -5px;
+  }
+  .akta-upsell-header {
+    margin-bottom: 32px;
+  }
+}

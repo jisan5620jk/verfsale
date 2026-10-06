@@ -1,0 +1,159 @@
+{%- comment -%}
+  PAGE FAQ SECTION
+  Leest page-metafields:
+    - custom.faq_in_page1  (FAQ-inhoud voor frontend)
+    - custom.faq_in_page   (FAQ_Schema voor JSON-LD)
+{%- endcomment -%}
+
+<style>
+  /* Container breedte + marges */
+  .page-faq-wrapper {
+    max-width: 900px;
+    margin: 3rem auto 4rem;
+    padding: 0 1.5rem;
+  }
+
+  /* Accordion-stijl lijst */
+  .page-faq-accordion {
+    background: transparent;
+  }
+
+  .page-faq-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0.75rem 0;
+  }
+
+  .page-faq-item:last-child {
+    border-bottom: none;
+  }
+
+  /* summary (vraag) */
+  .page-faq-summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+  }
+
+  /* standaard marker verbergen */
+  .page-faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* pijltje links */
+  .page-faq-summary::before {
+    content: "▾";
+    font-size: 0.8rem;
+    transform-origin: center;
+    transition: transform 0.2s ease;
+  }
+
+  /* gedraaide pijl als open */
+  .page-faq-item[open] .page-faq-summary::before {
+    transform: rotate(180deg);
+  }
+
+  /* Tekst van de vraag */
+  .page-faq-question {
+    font-weight: 700;
+  }
+
+  /* Antwoord */
+  .page-faq-answer {
+    padding-left: 1.4rem; /* uitlijnen met tekst na het pijltje */
+    margin-top: 0.5rem;
+  }
+
+  .page-faq-answer p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Alleen responsive marges/padding aanpassen */
+  @media (max-width: 768px) {
+    .page-faq-wrapper {
+      margin: 2rem auto 3rem;
+      padding: 0 1rem;
+    }
+  }
+</style>
+
+{%- if page -%}
+
+  {%- comment -%}
+    1. FAQ zichtbaar op de pagina
+    Metafield: custom.faq_in_page1 (JSON-array)
+  {%- endcomment -%}
+
+  {%- assign faqs = page.metafields.custom.faq_in_page1.value -%}
+
+  {%- if faqs and faqs.size > 0 -%}
+    <section class="page-faq-wrapper">
+      <h2 class="page-faq-heading">Veelgestelde vragen</h2>
+
+      <div class="page-faq-accordion">
+        {%- for item in faqs -%}
+          <details class="page-faq-item" {% if forloop.first %}open{% endif %}>
+            <summary class="page-faq-summary">
+              <span class="page-faq-question">
+                {{ item.q | default: item.question }}
+              </span>
+            </summary>
+            <div class="page-faq-answer">
+              <p>{{ item.a | default: item.answer }}</p>
+            </div>
+          </details>
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
+
+  {%- comment -%}
+    2. Schema genereren (fallback naar FAQ-inhoud)
+    Metafield: custom.faq_in_page (JSON-array met question/answer)
+  {%- endcomment -%}
+
+  {%- assign faq_schema_raw = page.metafields.custom.faq_in_page -%}
+
+  {%- if faq_schema_raw and faq_schema_raw.value != blank -%}
+    {%- assign faq_schema = faq_schema_raw.value -%}
+  {%- else -%}
+    {%- assign faq_schema = faqs -%}
+  {%- endif -%}
+
+  {%- if faq_schema and faq_schema.size > 0 -%}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for item in faq_schema -%}
+        {
+          "@type": "Question",
+          "name": {{ item.question | default: item.q | json }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ item.answer | default: item.a | json }}
+          }
+        }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    }
+    </script>
+  {%- endif -%}
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Page FAQ (met metafields)",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Page FAQ"
+    }
+  ]
+}
+{% endschema %}

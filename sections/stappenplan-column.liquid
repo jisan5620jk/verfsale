@@ -1,0 +1,93 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="stappenplan-column-wrapper">
+    <div class="section-{{ section.id }}-padding">
+        <div class="stappenplan-column-block page-width">
+            {% for block in section.blocks %}
+                <div class="stappenplan-column-item">
+                    {% if block.settings.image != blank %}
+                        <div class="sc-image-block">
+                            <img src="{{ block.settings.image | img_url:'master' }}" class="sc-image">
+                        </div>
+                    {% endif %}
+                    <div class="stappenplan-column-content">
+                        <h2 class="sc-heading">{{ block.settings.title }}</h2>
+                        <div class="sc-text">{{ block.settings.text }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "Stappenplan Column",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 52
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name":"Column",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label" :"Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label" :"Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label" :"Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stappenplan Column"
+    }
+  ]
+}
+{% endschema %}

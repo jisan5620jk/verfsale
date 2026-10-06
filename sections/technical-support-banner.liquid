@@ -1,0 +1,477 @@
+{% comment %}
+  Section: Technical Support Contact
+  Fonts: Eigerdals (Heading), Maven Pro (Body)
+  Constraints: No CSS Variables, No Dynamic CSS in Style tag.
+{% endcomment %}
+
+<!-- Import Google Font: Maven Pro -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Base Layout */
+  .tech-section-wrapper {
+    width: 100%;
+    padding: 60px 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+  }
+
+  .tech-container {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Main Split Card */
+  .tech-main-card {
+    display: flex;
+    flex-wrap: wrap;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    overflow: hidden;
+    /* Min-height to match aspect ratio */
+    min-height: 500px;
+  }
+
+  /* Left Column: Content */
+  .tech-content-col {
+    flex: 1;
+    min-width: 350px;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  /* Right Column: Image */
+  .tech-image-col {
+    flex: 1;
+    min-width: 350px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tech-image-col img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Decorative Blue Curve on Image */
+  .tech-curve-deco {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 40px;
+    height: 80px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    z-index: 2;
+  }
+
+  /* Typography & Elements */
+  .tech-icon-badge {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+
+  .tech-icon-badge svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  .tech-heading {
+    font-family: 'Eigerdals', 'Maven Pro', sans-serif;
+    font-size: 42px;
+    line-height: 1.1;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+  }
+
+  .tech-description {
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 35px 0;
+  }
+
+  /* Contact Items (Phone/Email) */
+  .tech-contact-item {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .tech-contact-item:hover {
+    transform: translateY(-2px);
+  }
+
+  .tech-contact-icon {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+  }
+
+  .tech-contact-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke-width: 2;
+  }
+
+  .tech-contact-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tech-contact-label {
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 2px;
+  }
+
+  .tech-contact-value {
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  /* Chat Button */
+  .tech-chat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 18px;
+    border-radius: 12px;
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 10px;
+    color: #ffffff;
+    transition: opacity 0.2s ease;
+  }
+
+  .tech-chat-btn:hover {
+    opacity: 0.9;
+  }
+
+  .tech-chat-btn svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+
+  /* Bottom Bar */
+  .tech-bottom-bar {
+    width: 100%;
+    padding: 15px 20px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    text-align: center;
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px; /* Space between card and footer as per design, or 0 if attached */
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 800px) {
+    .tech-main-card {
+      flex-direction: column;
+    }
+
+    .tech-content-col {
+      padding: 30px 20px;
+      order: 1;
+    }
+
+    .tech-image-col {
+      min-height: 250px;
+      order: 2;
+    }
+
+    .tech-heading {
+      font-size: 32px;
+    }
+
+    .tech-curve-deco {
+        display: none; /* Hide decorative curve on mobile for cleaner look */
+    }
+  }
+</style>
+
+<div class="tech-section-wrapper" style="background-color: {{ section.settings.section_bg }};">
+  <div class="tech-container">
+    <!-- Main Card Area -->
+    <div class="tech-main-card" style="background-color: {{ section.settings.card_bg }};">
+      <!-- Content Column -->
+      <div class="tech-content-col">
+        <!-- Icon Badge -->
+        <div
+          class="tech-icon-badge"
+          style="background-color: {{ section.settings.primary_color | color_modify: 'alpha', 0.1 }}; color: {{ section.settings.primary_color }};"
+        >
+          <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+
+        <!-- Headings -->
+        <h2 class="tech-heading" style="color: {{ section.settings.primary_color }};">
+          {{ section.settings.heading }}
+        </h2>
+        <div class="tech-description" style="color: {{ section.settings.text_color }};">
+          {{ section.settings.description }}
+        </div>
+
+        <!-- Phone Block -->
+        <a href="tel:{{ section.settings.phone_number }}" class="tech-contact-item">
+          <div class="tech-contact-icon" style="stroke: {{ section.settings.primary_color }};">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0 .57 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.03 12.03 0 0 0 2.81.57A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </div>
+          <div class="tech-contact-text">
+            <span class="tech-contact-label">{{ section.settings.phone_label }}</span>
+            <span class="tech-contact-value" style="color: {{ section.settings.primary_color }};">
+              {{- section.settings.phone_display -}}
+            </span>
+          </div>
+        </a>
+
+        <!-- Email Block -->
+        <a href="mailto:{{ section.settings.email_address }}" class="tech-contact-item">
+          <div class="tech-contact-icon" style="stroke: {{ section.settings.primary_color }};">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <div class="tech-contact-text">
+            <span class="tech-contact-label">{{ section.settings.email_label }}</span>
+            <span class="tech-contact-value" style="color: {{ section.settings.primary_color }};">
+              {{- section.settings.email_address -}}
+            </span>
+          </div>
+        </a>
+
+        <!-- Live Chat Button -->
+        <a
+          href="{{ section.settings.chat_url }}"
+          class="tech-chat-btn"
+          style="background-color: {{ section.settings.primary_color }};"
+        >
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          {{ section.settings.chat_text }}
+        </a>
+      </div>
+
+      <!-- Image Column -->
+      <div class="tech-image-col">
+        <!-- Decorative Blue Curve -->
+        <div class="tech-curve-deco" style="background-color: {{ section.settings.deco_color }};"></div>
+
+        {% if section.settings.image != blank %}
+          {{
+            section.settings.image
+            | image_url: width: 800
+            | image_tag: loading: 'lazy', alt: section.settings.heading
+          }}
+        {% else %}
+          {{ 'image' | placeholder_svg_tag }}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Bottom Green Bar -->
+    <div class="tech-bottom-bar" style="background-color: {{ section.settings.footer_bg }};">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      {{ section.settings.footer_text }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Technical Support Card",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background",
+      "default": "#eff5ff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#eef2fb"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Accent (Headings/Buttons)",
+      "default": "#b9005e"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body Text Color",
+      "default": "#4a5568"
+    },
+    {
+      "type": "color",
+      "id": "deco_color",
+      "label": "Image Curve Decoration",
+      "default": "#2067b2"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Do you have a technical question?"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Our team of waterproofing experts is here to help you get the best results. Whether you need product advice or application guidance, we're just a call away."
+    },
+    {
+      "type": "header",
+      "content": "Phone Contact"
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Phone Label",
+      "default": "Call us"
+    },
+    {
+      "type": "text",
+      "id": "phone_display",
+      "label": "Phone Number Display",
+      "default": "+1 (234) 567-890"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone Number Link (tel:)",
+      "default": "+1234567890"
+    },
+    {
+      "type": "header",
+      "content": "Email Contact"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email Label",
+      "default": "Email us"
+    },
+    {
+      "type": "text",
+      "id": "email_address",
+      "label": "Email Address",
+      "default": "support@wpflow.com"
+    },
+    {
+      "type": "header",
+      "content": "Chat Button"
+    },
+    {
+      "type": "text",
+      "id": "chat_text",
+      "label": "Button Text",
+      "default": "Start a live chat"
+    },
+    {
+      "type": "url",
+      "id": "chat_url",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Right Side Image"
+    },
+    {
+      "type": "header",
+      "content": "Footer Bar"
+    },
+    {
+      "type": "color",
+      "id": "footer_bg",
+      "label": "Footer Background",
+      "default": "#5dad40"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer Text",
+      "default": "Our experts are happy to help • Available Mon-Fri 8AM-6PM • Free technical consultation"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Technical Support Card"
+    }
+  ]
+}
+{% endschema %}

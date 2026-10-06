@@ -1,0 +1,68 @@
+
+<style>
+  #mfq_color_sub_popup_page{
+    margin: 30px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .mfq_color_sub_popup_mockup_image{
+    width: 100%;
+    height:430px;
+    border-radius: 3px;
+  }
+  .mfq_color_sub_popup_mockups{
+    display: flex;
+    width: 100%;
+    gap: 30px;
+    }
+  @media (max-width: 768px) {
+    .mfq_color_sub_popup_mockups{
+      flex-direction: column !important;
+    }
+    .mfq_color_sub_popup_mockup_image,.mfq_color_sub_popup_mockup_image > img{
+      height:300px !important;
+    }
+  }  
+</style>
+
+<div id="mfq_color_sub_popup_page" >
+ <h1 style="color:#D80077;line-height: 10px;" >Kleurkiezer</h1>
+  
+ <p style="font-size: 14px;" >Je hebt nu jouw kleur gekozen! Bekijk hieronder hoe jouw kleur er in het echt uit ziet. Let wel: kleuren op het beeldscherm kunnen afwijken van de realiteit. Deze afbeeldingen dienen enkel ter inspiratie.</p> 
+
+ <div style="display: flex;flex-direction: column;width: 100%;gap: 30px;" >  
+  <div class="mfq_color_sub_popup_mockups" >
+   <div style="display:flex;flex-direction:column;gap:6px;width:100%" >
+    <span style="font-weight: 700;font-size: 14px;" >Jouw kleur op de muur #2:</span> 
+    <div class="mfq_color_sub_popup_mockup_image" ><img style="width: 100%;height: 430px;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/1.png?v=1749237159" /></div>
+   </div> 
+   <div style="display:flex;flex-direction:column;gap:6px;width:100%" >
+    <span style="font-weight: 700;font-size: 14px;" >Jouw kleur op de muur:</span> 
+    <div class="mfq_color_sub_popup_mockup_image" ><img style="width: 100%;height: 430px;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/4.png?v=1749242577" /></div>
+   </div>
+  </div>
+  <div class="mfq_color_sub_popup_mockups" >
+   <div style="display:flex;flex-direction:column;gap:6px;width:100%" >
+    <span style="font-weight: 700;font-size: 14px;" >Jouw kleur op een deur en de kozijnen:</span> 
+    <div class="mfq_color_sub_popup_mockup_image" ><img style="width: 100%;height: 430px;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/3.png?v=1749238721" /></div>
+   </div>
+   <div style="display:flex;flex-direction:column;gap:6px;width:100%" >
+    <span style="font-weight: 700;font-size: 14px;" >Jouw kleur in de woonkamer:</span> 
+    <div class="mfq_color_sub_popup_mockup_image" ><img style="width: 100%;height: 430px;" src="https://cdn.shopify.com/s/files/1/0516/8375/4136/files/mockup-2_d0f1dbf3-2e69-4dd8-a74d-b14ce7425cf6.png?v=1749242432" /></div>    
+   </div>
+  </div>
+ </div>  
+</div>
+
+
+<script>
+  jQuery(document).ready(function(){
+   const urlParams = new URLSearchParams(window.location.search);
+   console.log(urlParams.get('color'))
+   const color = urlParams.get('color') || '#D80077';
+   $('.mfq_color_sub_popup_mockup_image').css('background',color);      
+  })
+</script>
+
+{% render 'related-products' %}

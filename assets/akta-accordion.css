@@ -1,0 +1,178 @@
+.akta-accordion {
+  padding: 80px 0;
+}
+.akta-accordion-container {
+  max-width: 840px;
+  margin: auto;
+  padding: 0 20px;
+}
+.akta-accordion-header {
+  margin-bottom: 48px;
+}
+.akta-accordion-title {
+  margin: 0 0 20px;
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 100%;
+  letter-spacing: 0.35px;
+  text-align: center;
+  color: rgba(185, 0, 102, 1);
+}
+.akta-accordion-subtitle {
+  margin: 0;
+  color: rgba(69, 85, 108, 1);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: -0.44px;
+  text-align: center;
+}
+.akta-accordion-item {
+  box-shadow:
+    0px 1px 2px -1px rgba(0, 0, 0, 0.1),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  border-radius: 16px;
+}
+.akta-accordion-item-header {
+  background: transparent;
+  border: 0;
+  outline: 0;
+  display: flex;
+  gap: 24px;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  padding: 32px;
+  cursor: pointer;
+}
+.item-number {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  background: rgba(186, 0, 102, 1);
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 1);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  border-radius: 50%;
+}
+
+.item-title strong {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: 0.35px;
+  color: rgba(185, 0, 102, 1);
+  margin: 0 0 16px;
+  display: block;
+}
+.item-title p {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: -0.44px;
+  color: rgba(69, 85, 108, 1);
+  margin: 0;
+}
+
+.akta-accordion-item-body-img img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+}
+
+.item-icon {
+  margin-left: auto;
+  display: block;
+}
+
+/* test  */
+.akta-accordion-item-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-height: 0;
+  gap: 20px;
+  overflow: hidden;
+  transition: 0.35s;
+  margin: 0 32px 0;
+}
+
+.akta-accordion-item-body > * {
+  overflow: hidden;
+}
+
+.akta-accordion-item.active .akta-accordion-item-body {
+  max-height: 2000px;
+  padding-bottom: 20px;
+}
+.akta-accordion-item-body-content > p {
+  margin-top: 0;
+}
+.item-icon svg {
+  transition: 0.3s;
+}
+.akta-accordion-item.active .item-icon svg {
+  transform: rotate(180deg);
+}
+
+.akta-accordion-btn a {
+  background: rgba(186, 0, 102, 1);
+  text-decoration: none;
+  color: rgba(255, 255, 255, 1);
+  font-family: Maven Pro;
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.15px;
+  text-align: center;
+  border-radius: 8px;
+  padding: 17px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: fit-content;
+  margin: 48px auto 0;
+}
+
+/* responsive  */
+@media (max-width: 768px) {
+  .akta-accordion-title {
+    font-size: 32px;
+  }
+  .item-title strong {
+    font-size: 16px;
+    margin: 0 0 10px;
+  }
+  .akta-accordion-item-header {
+    padding: 16px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .item-title {
+    order: 3;
+    width: 100%;
+  }
+  .item-number {
+    width: 32px;
+    height: 32px;
+  }
+  .akta-accordion-item-body {
+    margin: 0 16px 0;
+    grid-template-columns: 1fr;
+  }
+  .akta-accordion-item.active .akta-accordion-item-body {
+    padding-bottom: 8px;
+  }
+  .akta-accordion {
+    padding: 40px 0;
+  }
+  .akta-accordion-btn a {
+    width: 100%;
+    margin: 32px auto 0;
+  }
+}

@@ -1,0 +1,477 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  /* === MODERN SPEC TABLE (LIKE EXAMPLE SITE) === */
+
+.specs {
+  overflow-x: auto;
+}
+
+.specs-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 14px;
+}
+
+/* Remove heavy borders */
+.specs-table th,
+.specs-table td {
+  padding: 14px 18px;
+  text-align: left;
+  vertical-align: middle;
+  border: none;
+}
+
+/* Column widths */
+.specs-table th {
+  font-size:16px;
+}
+.specs-table th:first-child {
+  width: 23%;
+}
+
+.specs-table td {
+  font-size:16px;
+}
+
+/* Zebra striping */
+.specs-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.specs-table tbody tr:nth-child(even) {
+  background-color: #f6f6f6; /* light beige/grey */
+}
+
+/* Header */
+.specs-table thead th {
+  background: #f6f6f6;
+  font-weight: 600;
+  color: #000;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Row hover (optional but nice) */
+.specs-table tbody tr:hover {
+  background-color: #eeeeef;
+}
+
+/* Tooltip icon */
+/* .spec_tooltip {
+  margin-left: 6px;
+  vertical-align: middle;
+  cursor: pointer;
+} */
+
+/* .spec_tooltip svg {
+  width: 14px;
+  height: 14px;
+  fill: #0a8f6a;
+} */
+
+{%- endstyle -%}
+
+<div class="product-tabs section-{{ section.id }}-padding">
+  <div class="page-width">
+    <div class="tabs-wrapper">
+      <div class="tabs-header-block">
+        <div class="tabs-header">
+          {% if section.settings.tab1_title != blank %}
+            <button class="tab-button active" data-tab="tab-1">{{ section.settings.tab1_title }}</button>
+          {% endif %}
+
+          {%- comment -%}
+            Decide if "Specificaties" tab should show:
+            1) Preferred: chosen product metafields (arrays below)
+            2) Fallback A: metaobject rows (specs.rows)
+            3) Fallback B: rich text HTML (custom.specifications_html_new2)
+          {%- endcomment -%}
+
+{% assign spec_labels = "
+Merk,
+Levertijd,
+Kwaliteit,
+Inhoud,
+Extra eigenschappen,
+Aantal stuks,
+Categorie ondergrond roller-kwast,
+Type Kwasthaar,
+Type roller,
+Product breedte,
+Type kwast,
+Aantal Stuks In Verpakking,
+Rendement,
+Applicatie,
+glansgraad,
+Dekkend of transparant,
+Binnen of buiten,
+Binnen/buiten,
+Basis,
+Overschilderbaar,
+Type kit,
+Stofdroog,
+Filmvormend,
+Impregnerend,
+Ondergrond,
+Ondergronden,
+Reinigbaarheid,
+Categorie,
+Componenten,
+Vochtregulerend,
+Schrobklasse,
+Minimale verwerkingstemperatuur,
+Verbruik per liter,
+Gebruiksklaar,
+Productvoordelen
+" | strip | split: "," %}
+
+{% assign spec_keys = "
+custom.merk,
+custom.levertijd,
+custom.kwaliteit,
+custom.inhoud,
+custom.extra_eigenschappen,
+custom.aantal_stuks,
+custom.categorie_ondergrond_roller,
+custom.type_kwasthaar,
+custom.type_roller,
+custom.product_breedte,
+custom.type_kwast,
+custom.aantal_stuks_in_verpakking,
+my_fields.rendement,
+custom.applicatie,
+my_fields.afwerking,
+custom.dekkend_of_transparant,
+custom.binnen_of_buiten,
+custom.binnen_buiten,
+my_fields.basis.basis,
+my_fields.overschilderbaar,
+custom.type_kit,
+my_fields.stofdroog,
+custom.filmvormend,
+custom.impregnerend,
+custom.ondergrond,
+custom.ondergronden,
+custom.reinigbaarheid,
+my_fields.categorie,
+my_fields.componeneten,
+custom.vochtregulerend1,
+my_fields.schrobklasse,
+custom.minimale_verwerkingstemperatuur2,
+custom.verbruik_per_liter,
+custom.gebruiksklaar,
+custom.productvoordelen
+" | strip | split: "," %}
+
+          {% assign has_pairs = false %}
+          {% assign last_index = spec_labels.size | minus: 1 %}
+          {% for i in (0..last_index) %}
+            {% assign mk = spec_keys[i] | strip %}
+            {% if mk == '__vendor__' %}
+              {% assign v = product.vendor %}
+            {% else %}
+              {% assign ns = mk | split: "." | first %}
+              {% assign ky = mk | split: "." | last %}
+              {% assign v = product.metafields[ns][ky] %}
+            {% endif %}
+            {% if v != blank %}
+              {% assign has_pairs = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+
+          {% assign specs_rows = product.metafields.specs.rows.value %}
+          {% assign specs_html = product.metafields.custom.specifications_html_new2 %}
+          {% assign has_specs = has_pairs %}
+          {% if has_specs == false %}
+            {% if specs_rows and specs_rows.size > 0 %}
+              {% assign has_specs = true %}
+            {% elsif specs_html != blank %}
+              {% assign has_specs = true %}
+            {% endif %}
+          {% endif %}
+
+          {% if section.settings.tab2_title != blank and has_specs %}
+            <button class="tab-button" data-tab="tab-2">{{ section.settings.tab2_title }}</button>
+          {% endif %}
+
+          {% if section.settings.tab3_title != blank %}<button class="tab-button" data-tab="tab-3">{{ section.settings.tab3_title }}</button>{% endif %}
+          {% if section.settings.tab4_title != blank %}<button class="tab-button" data-tab="tab-4">{{ section.settings.tab4_title }}</button>{% endif %}
+          {% if section.settings.tab5_title != blank %}<button class="tab-button" data-tab="tab-5">{{ section.settings.tab5_title }}</button>{% endif %}
+        </div>
+      </div>
+
+      <div class="tabs-content">
+        {% assign tab_index = 0 %}
+        {% for block in section.blocks %}
+          {% assign tab_index = tab_index | plus: 1 %}
+          <div class="tab-content {% if forloop.first %}active{% endif %}" id="tab-{{ tab_index }}">
+            {% case block.type %}
+
+              {% when 'Productinformatie' %}
+                <div class="description-toggle-wrapper">
+                  <div class="product-description short">{{ product.description }}</div>
+                  <button class="show-more-button" aria-expanded="false">
+                    Toon meer <span class="icon"><span class="svg-wrapper">{{ 'icon-caret.svg' | inline_asset_content }}</span></span>
+                  </button>
+                </div>
+
+              {% when 'Specificaties' %}
+                <div class="specs">
+                  {% assign rendered_any = false %}
+                  <table class="specs-table specs-table--metafields">
+                    <thead>
+                      <tr>
+                        <th>{{ section.settings.specs_header_left | default: 'Kenmerk' }}</th>
+                        <th>{{ section.settings.specs_header_right | default: 'Waarde / Specificatie' }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% assign last_index = spec_labels.size | minus: 1 %}
+
+                      {% for i in (0..last_index) %}
+                        {% assign label = spec_labels[i] | strip %}
+                        {% assign mk = spec_keys[i] | strip %}
+
+                        {% if mk == '__vendor__' %}
+                          {% assign v = product.vendor %}
+                        {% else %}
+                          {% assign ns = mk | split: "." | first %}
+                          {% assign ky = mk | split: "." | last %}
+                          {% assign v = product.metafields[ns][ky] %}
+                        {% endif %}
+
+                        {% if v != blank %}
+                          {% assign rendered_any = true %}
+
+                          {%- comment -%}
+                            STEP 1: normalize value into an array called "items"
+                          {%- endcomment -%}
+
+                          {% assign items = nil %}
+
+                          {% if v.value != nil and v.value.size != nil %}
+                            {%- comment -%} LIST metafield {%- endcomment -%}
+                            {% assign items = v.value %}
+                          {% else %}
+                            {%- comment -%} TEXT metafield {%- endcomment -%}
+                            {% assign raw = v.value | default: v %}
+                            {% assign items = raw
+                              | replace: '<br />', '\n'
+                              | replace: '<br>', '\n'
+                              | replace: '</p>', '\n'
+                              | replace: '<p>', ''
+                              | split: '\n'
+                            %}
+                          {% endif %}
+
+                          {%- comment -%}
+                            STEP 2: render each item as its own table row
+                          {%- endcomment -%}
+
+                          {% for item in items %}
+                            {% assign clean_item = item | strip %}
+                            {% if clean_item != blank %}
+                              <tr class="specs-row">
+
+                                {% if forloop.first %}
+                                  <th class="specs-label test">
+                                    {{ label }}
+
+                                    {% assign s_label = label | handle %}
+                                    {% for block in section.blocks %}
+                                      {% if block.type == 'metafeild_info' %}
+                                        {% assign b_label = block.settings.title | handle %}
+                                        {% if s_label == b_label %}
+                                          <span class="spec_tooltip" data-text="{{ block.settings.text }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="50px" height="50px"><path d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 25 11 A 3 3 0 0 0 22 14 A 3 3 0 0 0 25 17 A 3 3 0 0 0 28 14 A 3 3 0 0 0 25 11 z M 21 21 L 21 23 L 22 23 L 23 23 L 23 36 L 22 36 L 21 36 L 21 38 L 22 38 L 23 38 L 27 38 L 28 38 L 29 38 L 29 36 L 28 36 L 27 36 L 27 21 L 26 21 L 22 21 L 21 21 z"/></svg>
+                                            
+                                          </span>
+                                        {% endif %}
+                                      {% endif %}
+                                    {% endfor %}
+                                  </th>
+                                {% else %}
+                                  <th class="specs-label"></th>
+                                {% endif %}
+
+                                <td class="specs-value">
+                                  {{ clean_item }}
+                                </td>
+                              </tr>
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                    </tbody>
+
+
+                  </table>
+
+                  {% unless rendered_any %}
+                    {% assign rows = product.metafields.specs.rows.value %}
+                    {% assign specs_html = product.metafields.custom.specifications_html_new2 %}
+
+                    {% if rows and rows.size > 0 %}
+                      <table class="specs-table specs-table--rows">
+                        <thead>
+                          <tr>
+                            <th>{{ section.settings.specs_header_left | default: 'Kenmerk' }}</th>
+                            <th>{{ section.settings.specs_header_right | default: 'Waarde / Specificatie' }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for r in rows %}
+                            <tr class="specs-row">
+                              <th class="specs-label">{{ r.label }}</th>
+                              {% assign rv = r.value %}
+                                <td class="specs-value">
+                                  {% if rv and rv.value != nil %}
+                                    {{ rv | metafield_tag | default: rv.value }}
+                                  {% else %}
+                                    {{ rv }}
+                                  {% endif %}
+                                </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+
+
+
+                      
+                    {% elsif specs_html != blank %}
+                      {{ specs_html | metafield_tag }}
+                    {% endif %}
+
+
+
+
+                    
+                  {% endunless %}
+                  {%- assign spec_links_html = product.metafields.custom.tech_sheet_link_label -%}
+                  {%- if spec_links_html != blank -%}
+                    <div class="specs-docs">
+                      {{ spec_links_html | metafield_tag }}
+                    </div>
+                  {%- endif -%}
+
+                </div>
+
+              {% when 'Reviews' %}
+                <div id="stamped-main-widget" data-widget-type="main-widget"
+                  data-product-id="{{ product.id }}"
+                  data-name="{{ product.title | escape }}"
+                  data-url="{{ shop.url }}{{ product.url }}"
+                  data-image-url="{{ product.featured_image | img_url: 'large' }}"
+                  data-description="{{ product.description | strip_html | truncate: 200 }}"
+                  data-product-sku="{{ product.variants.first.sku }}">
+                </div>
+                
+                <valued-widget layout="reviews" size="small" align="center" theme="dark" amount="6" height="default"></valued-widget>
+
+              {% when 'Verwerkingsgegevens' %}{{ block.settings.tab_content }}
+              {% when 'Veiligheid' %}{{ block.settings.tab_content }}
+
+            {% endcase %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function () {
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const tabId = button.getAttribute('data-tab');
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+        if (content.id === tabId) content.classList.add('active');
+      });
+    });
+  });
+
+  const showMoreBtn = document.querySelector('.show-more-button');
+  const descriptionEl = document.querySelector('.product-description');
+  if (showMoreBtn && descriptionEl) {
+    showMoreBtn.addEventListener('click', function () {
+      const isExpanded = descriptionEl.classList.toggle('expanded');
+      descriptionEl.classList.toggle('short', !isExpanded);
+      this.setAttribute('aria-expanded', isExpanded);
+      this.classList.toggle('expanded', isExpanded);
+      this.childNodes[0].nodeValue = isExpanded ? 'Toon minder ' : 'Toon meer ';
+      const iconSpan = this.querySelector('.icon');
+      if (iconSpan) iconSpan.classList.toggle('rotated', isExpanded);
+    });
+  }
+});
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Product Tabs",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "tab1_title", "label": "Tab 1 Title" },
+    { "type": "text", "id": "tab2_title", "label": "Tab 2 Title" },
+    { "type": "text", "id": "tab3_title", "label": "Tab 3 Title" },
+    { "type": "text", "id": "tab4_title", "label": "Tab 4 Title" },
+    { "type": "text", "id": "tab5_title", "label": "Tab 5 Title" },
+    { "type": "text", "id": "specs_header_left", "label": "Specs header (left)", "default": "Kenmerk" },
+    { "type": "text", "id": "specs_header_right", "label": "Specs header (right)", "default": "Waarde / Specificatie" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding Top", "default": 36 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding Bottom", "default": 36 }
+  ],
+  "blocks": [
+    { "type": "Productinformatie", "name": "Productinformatie","limit":1, "settings": [] },
+    { "type": "Specificaties", "name": "Specificaties","limit":1, "settings": [] },
+    {
+      "type": "Reviews", "name": "Reviews","limit":1,
+      "settings": [{ "type": "richtext", "id": "tab_content", "label": "Content" }]
+    },
+    {
+      "type": "Verwerkingsgegevens", "name": "Verwerkingsgegevens","limit":1,
+      "settings": [{ "type": "richtext", "id": "tab_content", "label": "Content" }]
+    },
+    {
+      "type": "Veiligheid", "name": "Veiligheid","limit":1,
+      "settings": [{ "type": "richtext", "id": "tab_content", "label": "Content" }]
+    },
+    {
+      "type": "metafeild_info",
+      "name":"Metafeild Information",
+      "settings": [
+        {
+          "type": "text",
+          "id":"title",
+          "label":"Title"
+        },
+        {
+          "type": "textarea",
+          "id":"text",
+          "label":"Information Text"
+        }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Product Tabs" }]
+}
+{% endschema %}
